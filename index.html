@@ -40,53 +40,54 @@
 
                     <!-- FILA 1: Z1, Z2, Z3 -->
                     <g id="map-Z1" class="zona-group">
-                        <rect x="20" y="20" width="240" height="140" class="zona-shape" rx="8"/>
-                        <text x="140" y="90" class="zona-text">ZONA 1</text>
-                        <text x="140" y="115" class="zona-label">Barra Sup Izq</text>
+                        <rect x="20" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="100" y="90" class="zona-text">ZONA 1</text>
+                        <text x="100" y="115" class="zona-label">Barra Sup Izq</text>
                     </g>
                     <g id="map-Z2" class="zona-group">
-                        <rect x="280" y="20" width="240" height="140" class="zona-shape" rx="8"/>
-                        <text x="400" y="90" class="zona-text">ZONA 2</text>
-                        <text x="400" y="115" class="zona-label">Barra Media</text>
+                        <rect x="200" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="280" y="90" class="zona-text">ZONA 2</text>
+                        <text x="280" y="115" class="zona-label">Barra Media</text>
                     </g>
                     <g id="map-Z3" class="zona-group">
-                        <rect x="540" y="20" width="240" height="140" class="zona-shape" rx="8"/>
-                        <text x="660" y="90" class="zona-text">ZONA 3</text>
-                        <text x="660" y="115" class="zona-label">Barra Sup Der</text>
+                        <rect x="380" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="460" y="90" class="zona-text">ZONA 3</text>
+                        <text x="460" y="115" class="zona-label">Barra Sup Der</text>
                     </g>
 
-                    <!-- FILA 2: [Vacío], ISLA, Z4 -->
-                    <rect x="280" y="180" width="240" height="150" class="map-bg-element" rx="8"/>
-                    <text x="400" y="255" class="map-bg-text" font-size="22" text-anchor="middle">ISLA CENTRAL</text>
-                    <text x="400" y="285" class="map-bg-text" font-size="14" text-anchor="middle" font-weight="normal">Cafeteras / Microondas</text>
-
+                    <!-- LATERAL DERECHO: Z4 (Mitad superior), Z5 (Mitad inferior) -->
                     <g id="map-Z4" class="zona-group">
-                        <rect x="540" y="180" width="240" height="150" class="zona-shape" rx="8"/>
-                        <text x="660" y="255" class="zona-text">ZONA 4</text>
-                        <text x="660" y="280" class="zona-label">Esquina / Frío</text>
+                        <rect x="560" y="20" width="220" height="225" class="zona-shape" rx="8"/>
+                        <text x="670" y="125" class="zona-text">ZONA 4</text>
+                        <text x="670" y="150" class="zona-label">Esquina / Frío</text>
+                    </g>
+                    <g id="map-Z5" class="zona-group">
+                        <rect x="560" y="265" width="220" height="225" class="zona-shape" rx="8"/>
+                        <text x="670" y="370" class="zona-text">ZONA 5</text>
+                        <text x="670" y="395" class="zona-label">Caja / Barra Inferior</text>
                     </g>
 
-                    <!-- FILA 3: Z7, Z6, Z5 -->
+                    <!-- CENTRO: ISLA -->
+                    <rect x="200" y="180" width="340" height="150" class="map-bg-element" rx="8"/>
+                    <text x="370" y="255" class="map-bg-text" font-size="22" text-anchor="middle">ISLA CENTRAL</text>
+                    <text x="370" y="285" class="map-bg-text" font-size="14" text-anchor="middle" font-weight="normal">Cafeteras / Microondas</text>
+
+                    <!-- FILA INFERIOR: Z7, PASO, Z6 -->
                     <g id="map-Z7" class="zona-group">
-                        <rect x="20" y="350" width="210" height="140" class="zona-shape" rx="8"/>
-                        <text x="125" y="420" class="zona-text">ZONA 7</text>
-                        <text x="125" y="445" class="zona-label">Fregadero</text>
+                        <rect x="20" y="350" width="320" height="140" class="zona-shape" rx="8"/>
+                        <text x="180" y="420" class="zona-text">ZONA 7</text>
+                        <text x="180" y="445" class="zona-label">Fregadero / Apoyo</text>
                     </g>
                     
                     <!-- PASO AL COMEDOR -->
-                    <path d="M 255 360 L 255 480" class="map-dashed-element" stroke-width="2" />
-                    <polygon points="248,470 262,470 255,482" fill="#D1D5DB" />
-                    <text x="245" y="420" class="map-bg-text" font-size="14" text-anchor="middle" transform="rotate(-90 245 420)">PASO</text>
+                    <path d="M 360 360 L 360 480" class="map-dashed-element" stroke-width="2" />
+                    <polygon points="353,470 367,470 360,482" fill="#D1D5DB" />
+                    <text x="350" y="420" class="map-bg-text" font-size="14" text-anchor="middle" transform="rotate(-90 350 420)">PASO</text>
 
                     <g id="map-Z6" class="zona-group">
-                        <rect x="280" y="350" width="240" height="140" class="zona-shape" rx="8"/>
-                        <text x="400" y="420" class="zona-text">ZONA 6</text>
-                        <text x="400" y="445" class="zona-label">Pasillo Central</text>
-                    </g>
-                    <g id="map-Z5" class="zona-group">
-                        <rect x="540" y="350" width="240" height="140" class="zona-shape" rx="8"/>
-                        <text x="660" y="420" class="zona-text">ZONA 5</text>
-                        <text x="660" y="445" class="zona-label">Caja / Barra Inferior</text>
+                        <rect x="380" y="350" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="460" y="420" class="zona-text">ZONA 6</text>
+                        <text x="460" y="445" class="zona-label">Pasillo Central</text>
                     </g>
                 </svg>
             </div>
