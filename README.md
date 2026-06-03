@@ -18,13 +18,13 @@ Permite consultar en tiempo real:
 
 ## ✨ Características Principales
 
-*   **⚡ Arquitectura Vanilla JS:** Sin dependencias externas, construida en HTML/CSS/JS nativo para garantizar rendimiento instantáneo en dispositivos móviles de cualquier gama.
-*   **📱 PWA y Modo Offline:** Integración de Service Workers y `manifest.json`. La aplicación es instalable y funciona sin conexión a internet.
-*   **🎨 Diseño Corporativo "Dark UI":** Estética moderna en tonos oscuros para reducir la fatiga visual, acentuada con la paleta de colores corporativa de Ñam Restaurantes (Naranja `#E65100` y Ámbar `#FFB300`).
-*   **👥 Panel Dual (Admin / Camareros):**
-    *   **Vista Admin:** Permite asignar los nombres del personal a sus respectivas zonas del día.
-    *   **Vista Camarero:** Cuadrícula de fácil lectura donde el trabajador selecciona su zona asignada y despliega su manual de operaciones.
-*   **📋 Normas Comunes Globales:** Acceso a 1-clic a las normativas de limpieza (Regla del Paño Verde), priorización al cliente y gestión de la vajilla.
+*   **⚡ Arquitectura Vanilla JS + Firebase:** Construida en HTML/CSS/JS nativo. Ahora utiliza **Firebase Realtime Database** para sincronizar automáticamente el panel del administrador con todos los dispositivos móviles al instante.
+*   **📱 PWA y Modo Offline:** Integración de Service Workers y `manifest.json`. La aplicación es instalable como una App nativa.
+*   **🎨 Diseño "SaaS Light":** Interfaz re-diseñada bajo una filosofía de "SaaS Productivity". Interfaz luminosa y profesional para mejorar la visibilidad, legibilidad y facilidad de uso durante turnos ajetreados.
+*   **👥 Panel Dual Sincronizado:**
+    *   **Vista Admin (Segura):** Protegido por sistema de contraseña First-Time con cifrado (SHA-256 Web Crypto API). Los responsables (`enc_1`, `enc_2`, `gerente`) pueden asignar al personal en vivo.
+    *   **Vista Camarero (Lectura):** Cuadrícula donde los camareros comprueban en tiempo real qué zona les toca, sin necesitar refrescar la página en ningún momento.
+*   **📖 Manuales Contextuales:** Botones integrados que muestran manuales rápidos (Modales) para ayudar a cualquier empleado, nuevo o veterano, a entender la lógica de la App de un vistazo.
 
 ## 🚀 Despliegue Rápido (GitHub Pages)
 
