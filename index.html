@@ -97,14 +97,48 @@
 
         <!-- VISTA ADMIN -->
         <section id="view-admin" class="view hidden">
-            <div class="intro-text">
-                <h2>Asignación de Personal</h2>
-                <p>Asigna los nombres de los camareros a cada zona. Se guardará automáticamente.</p>
+            
+            <!-- FORMULARIO LOGIN -->
+            <div id="admin-login-container" style="max-width: 400px; margin: 2rem auto; background: var(--bg-card); padding: 2.5rem 2rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                <h2 style="margin-bottom: 0.5rem; color: var(--secondary); text-align: center; font-weight: 900;">Acceso Restringido</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem;">Solo encargados y gerencia</p>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Usuario</label>
+                    <select id="login-user" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #D1D5DB; background: #F9FAFB; font-family: inherit; font-size: 1.05rem; cursor: pointer;">
+                        <option value="enc_1">Encargado 1 (enc_1)</option>
+                        <option value="enc_2">Encargado 2 (enc_2)</option>
+                        <option value="gerente">Gerente</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Contraseña</label>
+                    <input type="password" id="login-pass" placeholder="Tu contraseña" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #D1D5DB; background: #F9FAFB; font-family: inherit; font-size: 1.05rem;">
+                    <small style="color: var(--primary-hover); display: block; margin-top: 8px; font-weight: 500;">* Si es tu primer acceso, se guardará esta contraseña permanentemente.</small>
+                </div>
+                
+                <button id="btn-login" style="width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: background 0.2s;">Entrar al Panel</button>
+                <div id="login-error" style="color: var(--danger); margin-top: 15px; text-align: center; font-weight: bold; display: none;">Contraseña incorrecta.</div>
             </div>
-            <div id="grid-zonas-admin" class="admin-grid">
-                <!-- Generado por JS -->
+
+            <!-- CONTENIDO ADMIN (Oculto por defecto) -->
+            <div id="admin-content" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="font-size: 1.1rem; color: var(--secondary); font-weight: bold;">👤 Hola, <span id="logged-user-name" style="color:var(--primary)"></span></p>
+                    <button id="btn-logout" style="padding: 8px 16px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; cursor: pointer; color: #475569; font-weight: bold; transition: all 0.2s;">Cerrar Sesión</button>
+                </div>
+                
+                <div class="intro-text">
+                    <h2>Asignación de Personal</h2>
+                    <p>Asigna los nombres a cada zona. Se sincronizará en tiempo real con todos los camareros.</p>
+                </div>
+                
+                <div id="grid-zonas-admin" class="admin-grid">
+                    <!-- Generado por JS -->
+                </div>
+                <button id="btn-clear-assignments" class="btn-danger">Limpiar Todas las Asignaciones</button>
             </div>
-            <button id="btn-clear-assignments" class="btn-danger">Limpiar Asignaciones</button>
         </section>
     </main>
 

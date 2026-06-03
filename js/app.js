@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, onValue, set, remove } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getDatabase, ref, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // Credenciales inyectadas por el Director
 const firebaseConfig = {
@@ -31,6 +31,7 @@ const zonasData = [
 document.addEventListener('DOMContentLoaded', () => {
     initTabs();
     initModals();
+    initAuth(); // Inicializar lógica de login
     renderAdmin(); // Montaje inicial de inputs
     renderCamareros(); // Estado visual inicial
     
@@ -43,6 +44,86 @@ document.addEventListener('DOMContentLoaded', () => {
         updateModalIfOpen();
     });
 });
+
+// --- SISTEMA DE AUTENTICACIÓN ---
+async function hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function initAuth() {
+    const savedUser = localStorage.getItem('nam_admin_user');
+    if (savedUser) {
+        showAdminPanel(savedUser);
+    }
+
+    document.getElementById('btn-login').addEventListener('click', async () => {
+        const user = document.getElementById('login-user').value;
+        const pass = document.getElementById('login-pass').value.trim();
+        const errorDiv = document.getElementById('login-error');
+        
+        if (!pass) {
+            errorDiv.textContent = "Introduce una contraseña.";
+            errorDiv.style.display = 'block';
+            return;
+        }
+        
+        const hashedPass = await hashPassword(pass);
+        const adminRef = ref(db, 'admins/' + user);
+        
+        // Bloquear botón mientras comprueba
+        const btn = document.getElementById('btn-login');
+        btn.textContent = "Comprobando...";
+        btn.disabled = true;
+
+        try {
+            const snapshot = await get(adminRef);
+            if (snapshot.exists()) {
+                // El admin ya tiene contraseña guardada, comparar
+                if (snapshot.val() === hashedPass) {
+                    doLogin(user);
+                } else {
+                    errorDiv.textContent = "Contraseña incorrecta.";
+                    errorDiv.style.display = 'block';
+                }
+            } else {
+                // Primera vez que entra, guardar la contraseña
+                await set(adminRef, hashedPass);
+                doLogin(user);
+            }
+        } catch (error) {
+            console.error("Error conectando con Firebase", error);
+            errorDiv.textContent = "Error de conexión.";
+            errorDiv.style.display = 'block';
+        } finally {
+            btn.textContent = "Entrar al Panel";
+            btn.disabled = false;
+        }
+    });
+
+    document.getElementById('btn-logout').addEventListener('click', () => {
+        localStorage.removeItem('nam_admin_user');
+        document.getElementById('admin-content').classList.add('hidden');
+        document.getElementById('admin-login-container').classList.remove('hidden');
+    });
+}
+
+function doLogin(username) {
+    localStorage.setItem('nam_admin_user', username);
+    document.getElementById('login-error').style.display = 'none';
+    document.getElementById('login-pass').value = '';
+    showAdminPanel(username);
+}
+
+function showAdminPanel(username) {
+    document.getElementById('admin-login-container').classList.add('hidden');
+    document.getElementById('admin-content').classList.remove('hidden');
+    document.getElementById('logged-user-name').textContent = username;
+}
+// --------------------------------
 
 function saveAsignacion(id, name) {
     // Si name viene vacío, Firebase elimina el nodo automáticamente o lo deja nulo (que es lo que queremos)
