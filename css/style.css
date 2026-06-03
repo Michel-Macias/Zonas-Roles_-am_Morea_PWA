@@ -173,11 +173,11 @@ body {
 /* Plano SVG */
 .plano-general-container { margin-bottom: 2rem; text-align: center; }
 .plano-general-container h3 { color: var(--secondary); margin-bottom: 15px; font-size: 1.2rem; }
-.plano-svg { width: 100%; max-width: 500px; height: auto; border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-.zona-shape { fill: #2A2A2A; stroke: var(--border-color); stroke-width: 2; transition: all 0.3s; }
-.zona-text { fill: var(--primary); font-size: 18px; font-weight: 800; text-anchor: middle; }
-.zona-label { fill: var(--text-muted); font-size: 11px; text-anchor: middle; }
-.zona-group.active .zona-shape { fill: var(--primary); stroke: #FFF; }
-.zona-group.active .zona-text, .zona-group.active .zona-label { fill: #121212; font-weight: 800; }
+.plano-svg { width: 100%; max-width: 600px; height: auto; border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); background: #121212; }
+.zona-shape { fill: #222; stroke: #444; stroke-width: 3; transition: all 0.3s ease; cursor: pointer; }
+.zona-text { fill: var(--primary); font-size: 26px; font-weight: 800; text-anchor: middle; pointer-events: none;}
+.zona-label { fill: #888; font-size: 14px; text-anchor: middle; pointer-events: none;}
+.zona-group.active .zona-shape { fill: var(--primary); stroke: #FFF; stroke-width: 4; }
+.zona-group.active .zona-text, .zona-group.active .zona-label { fill: #000; font-weight: 900; }
 .modal-map-container { margin-top: 15px; margin-bottom: 20px; text-align: center; background: #000; padding: 10px; border-radius: 10px; border: 1px solid var(--border-color); }
-.modal-map-container svg { max-height: 180px; width: 100%; }
+.modal-map-container svg { max-height: 220px; width: 100%; }
