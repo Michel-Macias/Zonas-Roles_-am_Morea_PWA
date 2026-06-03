@@ -6,8 +6,8 @@
     <title>Ñam - Organización de Zonas</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#E65100">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#F9FAFB">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
     <header class="app-header">
@@ -32,11 +32,10 @@
             <div class="plano-general-container">
                 <h3>🗺️ Plano General del Local</h3>
                 <svg viewBox="0 0 800 620" id="plano-svg" class="plano-svg">
-                    <rect width="800" height="620" fill="#121212" rx="10" />
                     
                     <!-- COMEDOR (Abajo del todo) -->
-                    <rect x="20" y="520" width="760" height="80" fill="none" stroke="#444" stroke-dasharray="10,10" stroke-width="3" rx="10"/>
-                    <text x="400" y="570" fill="#666" font-size="28" text-anchor="middle" font-weight="bold" letter-spacing="4">COMEDOR</text>
+                    <rect x="20" y="520" width="760" height="80" class="map-dashed-element" rx="10"/>
+                    <text x="400" y="570" class="map-bg-text" font-size="28" text-anchor="middle" letter-spacing="4">COMEDOR</text>
 
                     <!-- FILA 1: Z1, Z2, Z3 -->
                     <g id="map-Z1" class="zona-group">
@@ -56,9 +55,9 @@
                     </g>
 
                     <!-- FILA 2: [Vacío], ISLA, Z4 -->
-                    <rect x="280" y="180" width="240" height="150" fill="#1A1A1A" stroke="#333" stroke-width="4" rx="8"/>
-                    <text x="400" y="255" fill="#555" font-size="22" text-anchor="middle" font-weight="bold">ISLA CENTRAL</text>
-                    <text x="400" y="285" fill="#444" font-size="14" text-anchor="middle">Cafeteras / Microondas</text>
+                    <rect x="280" y="180" width="240" height="150" class="map-bg-element" rx="8"/>
+                    <text x="400" y="255" class="map-bg-text" font-size="22" text-anchor="middle">ISLA CENTRAL</text>
+                    <text x="400" y="285" class="map-bg-text" font-size="14" text-anchor="middle" font-weight="normal">Cafeteras / Microondas</text>
 
                     <g id="map-Z4" class="zona-group">
                         <rect x="540" y="180" width="240" height="150" class="zona-shape" rx="8"/>
@@ -74,9 +73,9 @@
                     </g>
                     
                     <!-- PASO AL COMEDOR -->
-                    <path d="M 255 360 L 255 480" stroke="#888" stroke-width="2" stroke-dasharray="6,6" />
-                    <polygon points="248,470 262,470 255,482" fill="#888" />
-                    <text x="245" y="420" fill="#AAA" font-size="14" text-anchor="middle" font-weight="bold" transform="rotate(-90 245 420)">PASO</text>
+                    <path d="M 255 360 L 255 480" class="map-dashed-element" stroke-width="2" />
+                    <polygon points="248,470 262,470 255,482" fill="#D1D5DB" />
+                    <text x="245" y="420" class="map-bg-text" font-size="14" text-anchor="middle" transform="rotate(-90 245 420)">PASO</text>
 
                     <g id="map-Z6" class="zona-group">
                         <rect x="280" y="350" width="240" height="140" class="zona-shape" rx="8"/>
