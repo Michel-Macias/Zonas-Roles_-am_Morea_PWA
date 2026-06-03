@@ -89,10 +89,16 @@ function showZonaModal(id) {
     const asignaciones = getAsignaciones();
     const asignado = asignaciones[id] || 'Sin asignar';
     
+    const mapHtml = document.getElementById('plano-svg').outerHTML;
+    
     const html = `
         <h2>${zona.id} - ${zona.nombre}</h2>
         <p style="color:var(--text-muted); margin-bottom:10px; font-size:0.9rem;">📍 ${zona.ubicacion}</p>
         <p><strong>👤 Camarero/a:</strong> <span style="color:var(--primary)">${asignado}</span></p>
+        
+        <div class="modal-map-container">
+            ${mapHtml}
+        </div>
         
         <div class="section-title">🎯 Misión Principal</div>
         <p style="font-size: 0.95rem;">${zona.mision_principal}</p>
@@ -109,6 +115,14 @@ function showZonaModal(id) {
     `;
     
     document.getElementById('modal-body-zona').innerHTML = html;
+    
+    const modalMap = document.querySelector('#modal-body-zona .plano-svg');
+    modalMap.removeAttribute('id');
+    const activeGroup = modalMap.querySelector('#map-' + id);
+    if(activeGroup) {
+        activeGroup.classList.add('active');
+    }
+    
     document.getElementById('modal-zona').showModal();
 }
 
