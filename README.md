@@ -3,6 +3,8 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-E65100.svg)
 ![PWA](https://img.shields.io/badge/PWA-Ready-FFB300.svg)
 
+**🚀 Acceso a la App:** [**Abre la PWA aquí (Enlace Oficial)**](https://Michel-Macias.github.io/Zonas-Roles_-am_Morea_PWA/)
+
 Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para la gestión y asignación de zonas de trabajo en el restaurante **Ñam Morea**. 
 
 ## 🎯 Objetivo del Proyecto
