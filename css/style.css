@@ -66,7 +66,20 @@ body {
 .view.hidden { display: none; }
 .intro-text { margin-bottom: 2rem; text-align: center; }
 .intro-text h2 { color: var(--secondary); margin-bottom: 0.5rem; font-size: 1.6rem; font-weight: 800; }
-.intro-text p { color: var(--text-muted); font-size: 1rem; }
+.intro-text p { color: var(--text-muted); font-size: 1rem; margin-bottom: 12px; }
+.btn-manual { 
+    background: #F1F5F9; 
+    border: 1px solid #CBD5E1; 
+    color: var(--secondary); 
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    font-weight: 700; 
+    font-size: 0.9rem; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    font-family: inherit;
+}
+.btn-manual:hover { background: #E2E8F0; color: var(--primary-hover); }
 
 /* Grid Camareros */
 .zonas-grid {

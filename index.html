@@ -27,6 +27,7 @@
             <div class="intro-text">
                 <h2>Planificación del Turno</h2>
                 <p>Selecciona tu zona para ver tus responsabilidades y flujos de trabajo.</p>
+                <button class="btn-manual" onclick="document.getElementById('modal-manual-camarero').showModal()">📖 Manual de Uso (Camareros)</button>
             </div>
             
             <div class="plano-general-container">
@@ -132,6 +133,7 @@
                 <div class="intro-text">
                     <h2>Asignación de Personal</h2>
                     <p>Asigna los nombres a cada zona. Se sincronizará en tiempo real con todos los camareros.</p>
+                    <button class="btn-manual" onclick="document.getElementById('modal-manual-admin').showModal()" style="margin-top: 10px;">📖 Manual del Encargado</button>
                 </div>
                 
                 <div id="grid-zonas-admin" class="admin-grid">
@@ -194,6 +196,69 @@
                         <li>No mezclar vajilla fría con caliente.</li>
                         <li>Pre-organizar elementos antes de enviar a Zona 7.</li>
                     </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL MANUAL CAMARERO -->
+    <dialog id="modal-manual-camarero" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--secondary); margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">📖 Manual del Camarero</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🎯 Objetivo de la App</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Saber exactamente dónde te toca trabajar hoy y qué tareas tienes asignadas en tu zona.</p>
+                </div>
+                <div class="norma-item">
+                    <h3>📱 ¿Cómo se usa?</h3>
+                    <ol style="margin-left: 20px; color: var(--text-main); font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+                        <li>Abre la aplicación al llegar a tu turno.</li>
+                        <li>Busca tu nombre en las tarjetas blancas de abajo. Aparecerá en <span style="color:var(--primary-hover); font-weight:bold; background:var(--primary-light); padding: 2px 6px; border-radius:4px;">Naranja</span>.</li>
+                        <li><strong>Toca tu tarjeta</strong> para abrir tu plano de trabajo.</li>
+                        <li>Revisa con atención:
+                            <ul style="margin-top: 5px; margin-bottom: 5px;">
+                                <li>Tu ubicación exacta en el local.</li>
+                                <li>La maquinaria que debes controlar.</li>
+                                <li><strong>Flujos:</strong> A quién debes pedirle cosas (ej. cafés) y a quién debes ayudar.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div class="norma-item" style="border-bottom: none;">
+                    <h3>⚡ Cambios en Directo</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px;">No necesitas recargar la página. Si el encargado te cambia de zona en mitad del servicio, tu pantalla se actualizará sola al instante.</p>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL MANUAL ADMIN -->
+    <dialog id="modal-manual-admin" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--secondary); margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">📖 Manual del Encargado</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🔐 Sobre el Acceso</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Selecciona tu perfil (enc_1, enc_2 o gerente). <strong>Importante:</strong> La contraseña que introduzcas la primera vez se registrará para siempre y protegerá tu perfil.</p>
+                </div>
+                <div class="norma-item">
+                    <h3>✍️ Asignar Personal</h3>
+                    <ul style="margin-left: 20px; color: var(--text-main); font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+                        <li>Verás los campos de texto para las 7 zonas.</li>
+                        <li>Simplemente escribe el nombre del camarero/a.</li>
+                        <li><strong>No hay botón de guardar:</strong> Al dejar de teclear (medio segundo), el nombre se sube a la nube y aparece en los móviles de los camareros al instante.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>🧹 Limpiar Turno</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Usa el botón rojo <strong>"Limpiar Todas las Asignaciones"</strong> al terminar el día. Esto vacía el cuadrante para el siguiente turno en todos los dispositivos.</p>
+                </div>
+                <div class="norma-item" style="border-bottom: none;">
+                    <h3>🚪 Cierre de Sesión</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Si usas un iPad compartido del restaurante, haz clic en "Cerrar Sesión" arriba a la derecha para que nadie modifique el cuadrante usando tu usuario.</p>
                 </div>
             </div>
         </div>
