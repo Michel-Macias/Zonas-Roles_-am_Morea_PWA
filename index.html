@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ñam - Organización de Zonas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#E65100">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo-container">
+            <h1 class="logo">Ñam <span>Zonas</span></h1>
+        </div>
+        <nav class="tabs">
+            <button class="tab-btn active" data-target="view-camarero">Camareros</button>
+            <button class="tab-btn" data-target="view-admin">Admin</button>
+            <button class="tab-btn" id="btn-normas">Normas</button>
+        </nav>
+    </header>
+
+    <main class="app-content">
+        <!-- VISTA CAMARERO -->
+        <section id="view-camarero" class="view active">
+            <div class="intro-text">
+                <h2>Planificación del Turno</h2>
+                <p>Selecciona tu zona para ver tus responsabilidades y flujos de trabajo.</p>
+            </div>
+            <div id="grid-zonas-camarero" class="zonas-grid">
+                <!-- Generado por JS -->
+            </div>
+        </section>
+
+        <!-- VISTA ADMIN -->
+        <section id="view-admin" class="view hidden">
+            <div class="intro-text">
+                <h2>Asignación de Personal</h2>
+                <p>Asigna los nombres de los camareros a cada zona. Se guardará automáticamente.</p>
+            </div>
+            <div id="grid-zonas-admin" class="admin-grid">
+                <!-- Generado por JS -->
+            </div>
+            <button id="btn-clear-assignments" class="btn-danger">Limpiar Asignaciones</button>
+        </section>
+    </main>
+
+    <!-- MODAL DETALLE ZONA -->
+    <dialog id="modal-zona" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div id="modal-body-zona"></div>
+        </div>
+    </dialog>
+
+    <!-- MODAL NORMAS COMUNES -->
+    <dialog id="modal-normas" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">📋 Normas Comunes</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🧹 1. Orden y Limpieza</h3>
+                    <ul>
+                        <li>Mantener la zona de trabajo impecable.</li>
+                        <li>Desbarasar y limpiar inmediatamente superficies libres.</li>
+                        <li><strong>Regla Verde:</strong> Usar exclusivamente estropajo/paño verde.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>👥 2. Atención al Cliente</h3>
+                    <ul>
+                        <li>Saludo proactivo, contacto visual y sonrisa.</li>
+                        <li><strong>Prioridad Absoluta:</strong> El cliente es lo primero. Tareas logísticas son secundarias.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>⏱️ 3. Gestión de Tiempos</h3>
+                    <ul>
+                        <li>Servir con agilidad sin comprometer presentación.</li>
+                        <li>Anticiparse a picos de trabajo (rush) pidiendo apoyo.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>📦 4. Reposición de Pulmones</h3>
+                    <ul>
+                        <li>Asegurar abastecimiento de vajilla, cristalería, pinchos y platos.</li>
+                        <li>Nunca llegar a cero. Reponer en momentos valle.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>🍽️ 5. Normativas de Vajilla (Crítico)</h3>
+                    <ul>
+                        <li><strong>PROHIBIDO</strong> apilar vajilla caliente.</li>
+                        <li>No mezclar vajilla fría con caliente.</li>
+                        <li>Pre-organizar elementos antes de enviar a Zona 7.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="js/app.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
