@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // Credenciales inyectadas por el Director
 const firebaseConfig = {
@@ -14,6 +15,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 // Estado de la memoria central (SOT)
 let currentAsignaciones = {};
@@ -45,20 +47,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- SISTEMA DE AUTENTICACIÓN ---
-async function hashPassword(password) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(password);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+// --- HELPER SANITIZACIÓN XSS ---
+function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>"']/g, function(m) {
+        switch (m) {
+            case '&': return '&amp;';
+            case '<': return '&lt;';
+            case '>': return '&gt;';
+            case '"': return '&quot;';
+            case "'": return '&#039;';
+            default: return m;
+        }
+    });
+}
+
+// --- SISTEMA DE AUTENTICACIÓN (FIREBASE AUTH) ---
+function getUserEmail(username) {
+    return `${username}@nam-zonas.local`;
 }
 
 function initAuth() {
-    const savedUser = localStorage.getItem('nam_admin_user');
-    if (savedUser) {
-        showAdminPanel(savedUser);
-    }
+    // Escucha en tiempo real el estado de autenticación de Firebase
+    onAuthStateChanged(auth, (firebaseUser) => {
+        if (firebaseUser) {
+            const username = firebaseUser.email.split('@')[0];
+            showAdminPanel(username);
+        } else {
+            hideAdminPanel();
+        }
+    });
 
     document.getElementById('btn-login').addEventListener('click', async () => {
         const user = document.getElementById('login-user').value;
@@ -70,58 +88,56 @@ function initAuth() {
             errorDiv.style.display = 'block';
             return;
         }
+        if (pass.length < 6) {
+            errorDiv.textContent = "La contraseña debe tener al menos 6 caracteres.";
+            errorDiv.style.display = 'block';
+            return;
+        }
         
-        const hashedPass = await hashPassword(pass);
-        const adminRef = ref(db, 'admins/' + user);
-        
-        // Bloquear botón mientras comprueba
+        const email = getUserEmail(user);
         const btn = document.getElementById('btn-login');
         btn.textContent = "Comprobando...";
         btn.disabled = true;
+        errorDiv.style.display = 'none';
 
         try {
-            const snapshot = await get(adminRef);
-            if (snapshot.exists()) {
-                // El admin ya tiene contraseña guardada, comparar
-                if (snapshot.val() === hashedPass) {
-                    doLogin(user);
-                } else {
-                    errorDiv.textContent = "Contraseña incorrecta.";
+            // Intentar iniciar sesión
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (error) {
+            // Manejar registro automático seguro en el primer inicio de sesión
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                try {
+                    await createUserWithEmailAndPassword(auth, email, pass);
+                } catch (createError) {
+                    console.error("Error al registrar encargado", createError);
+                    if (createError.code === 'auth/email-already-in-use') {
+                        errorDiv.textContent = "Contraseña incorrecta.";
+                    } else {
+                        errorDiv.textContent = "Error de autenticación.";
+                    }
                     errorDiv.style.display = 'block';
                 }
+            } else if (error.code === 'auth/wrong-password') {
+                errorDiv.textContent = "Contraseña incorrecta.";
+                errorDiv.style.display = 'block';
             } else {
-                // Primera vez que entra, guardar la contraseña
-                await set(adminRef, hashedPass);
-                doLogin(user);
+                console.error("Error de conexión con Firebase Auth", error);
+                errorDiv.textContent = "Error de conexión.";
+                errorDiv.style.display = 'block';
             }
-        } catch (error) {
-            console.error("Error conectando con Firebase", error);
-            errorDiv.textContent = "Error de conexión.";
-            errorDiv.style.display = 'block';
         } finally {
             btn.textContent = "Entrar al Panel";
             btn.disabled = false;
         }
     });
 
-    document.getElementById('btn-logout').addEventListener('click', () => {
-        localStorage.removeItem('nam_admin_user');
-        document.getElementById('admin-content').classList.add('hidden');
-        document.getElementById('admin-login-container').classList.remove('hidden');
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+        try {
+            await signOut(auth);
+        } catch (error) {
+            console.error("Error al cerrar sesión", error);
+        }
     });
-}
-
-function doLogin(username) {
-    localStorage.setItem('nam_admin_user', username);
-    document.getElementById('login-error').style.display = 'none';
-    document.getElementById('login-pass').value = '';
-    showAdminPanel(username);
-}
-
-function showAdminPanel(username) {
-    document.getElementById('admin-login-container').classList.add('hidden');
-    document.getElementById('admin-content').classList.remove('hidden');
-    document.getElementById('logged-user-name').textContent = username;
 }
 // --------------------------------
 
@@ -194,7 +210,7 @@ function renderCamareros() {
             <div class="zona-card ${asignado ? 'has-asignado' : ''}" data-id="${z.id}">
                 <div class="zona-id">${z.id}</div>
                 <div class="zona-nombre">${z.nombre}</div>
-                ${asignado ? `<div class="zona-asignado">👤 ${asignado}</div>` : `<div class="zona-asignado" style="background:transparent;color:var(--text-muted);border:1px solid var(--border-color);">Sin asignar</div>`}
+                ${asignado ? `<div class="zona-asignado">👤 ${escapeHTML(asignado)}</div>` : `<div class="zona-asignado" style="background:transparent;color:var(--text-muted);border:1px solid var(--border-color);">Sin asignar</div>`}
             </div>
         `;
     }).join('');
@@ -215,26 +231,26 @@ function showZonaModal(id) {
     
     const html = `
         <div class="modal-body-zona">
-            <h2>${zona.id} - ${zona.nombre}</h2>
-            <p style="color:var(--text-muted); margin-bottom:10px; font-size:0.95rem; font-weight:500;">📍 ${zona.ubicacion}</p>
-            <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>👤 Camarero/a:</strong> <span style="color:var(--primary-hover); font-weight:800;">${asignado}</span></p>
+            <h2>${zona.id} - ${escapeHTML(zona.nombre)}</h2>
+            <p style="color:var(--text-muted); margin-bottom:10px; font-size:0.95rem; font-weight:500;">📍 ${escapeHTML(zona.ubicacion)}</p>
+            <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>👤 Camarero/a:</strong> <span style="color:var(--primary-hover); font-weight:800;">${escapeHTML(asignado)}</span></p>
             
             <div class="modal-map-container">
                 ${mapHtml}
             </div>
             
             <div class="section-title">🎯 Misión Principal</div>
-            <p style="font-size: 1rem;">${zona.mision_principal}</p>
+            <p style="font-size: 1rem;">${escapeHTML(zona.mision_principal)}</p>
             
             <div class="section-title">📋 Tareas y Equipamiento</div>
-            <div>${zona.tareas_secundarias.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-            <div style="margin-top:8px;">${zona.equipamiento.map(e => `<span class="tag" style="background:#FFF7ED; color:#EA580C; border-color:#FDBA74;">⚙️ ${e}</span>`).join('')}</div>
+            <div>${zona.tareas_secundarias.map(t => `<span class="tag">${escapeHTML(t)}</span>`).join('')}</div>
+            <div style="margin-top:8px;">${zona.equipamiento.map(e => `<span class="tag" style="background:#FFF7ED; color:#EA580C; border-color:#FDBA74;">⚙️ ${escapeHTML(e)}</span>`).join('')}</div>
             
             <div class="section-title">🔄 Flujos de Trabajo</div>
-            <p style="font-size: 0.95rem;"><strong>Pide a:</strong> ${zona.flujos.pide_a.join(', ')}</p>
-            <p style="font-size: 0.95rem;"><strong>Da soporte a:</strong> ${zona.flujos.da_soporte_a.join(', ')}</p>
+            <p style="font-size: 0.95rem;"><strong>Pide a:</strong> ${zona.flujos.pide_a.map(x => escapeHTML(x)).join(', ')}</p>
+            <p style="font-size: 0.95rem;"><strong>Da soporte a:</strong> ${zona.flujos.da_soporte_a.map(x => escapeHTML(x)).join(', ')}</p>
             
-            ${zona.notas_especiales ? `<div class="section-title" style="color:var(--danger)">⚠️ Notas Críticas</div><p style="font-size: 0.95rem;">${zona.notas_especiales}</p>` : ''}
+            ${zona.notas_especiales ? `<div class="section-title" style="color:var(--danger)">⚠️ Notas Críticas</div><p style="font-size: 0.95rem;">${escapeHTML(zona.notas_especiales)}</p>` : ''}
         </div>
     `;
     
