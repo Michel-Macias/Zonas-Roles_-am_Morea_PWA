@@ -139,6 +139,18 @@ function initAuth() {
         }
     });
 }
+
+function showAdminPanel(username) {
+    document.getElementById('admin-login-container').classList.add('hidden');
+    document.getElementById('admin-content').classList.remove('hidden');
+    document.getElementById('logged-user-name').textContent = username;
+}
+
+function hideAdminPanel() {
+    document.getElementById('admin-content').classList.add('hidden');
+    document.getElementById('admin-login-container').classList.remove('hidden');
+    document.getElementById('logged-user-name').textContent = '';
+}
 // --------------------------------
 
 function saveAsignacion(id, name) {
