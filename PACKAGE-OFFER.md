@@ -1,6 +1,6 @@
-# Ñam Zonas — Pack Comercial para Cliente
+# PuestoYa PWA — Pack Comercial para Cliente
 
-## Propuesta para Ñam Restaurantes
+## Propuesta para cliente final
 
 ### Opción A — Suscripción
 - 1 local

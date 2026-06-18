@@ -1,6 +1,6 @@
 {
-  "name": "Ñam Zonas Organizador",
-  "short_name": "ÑamZonas",
+  "name": "PuestoYa Organizador",
+  "short_name": "PuestoYa",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#121212",

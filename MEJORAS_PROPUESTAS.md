@@ -1,8 +1,8 @@
-# 📋 Propuesta de Mejoras — Ñam Zonas PWA (Zonas-Roles_-am_Morea_PWA)
+# 📋 Propuesta de Mejoras — PuestoYa PWA
 
 **Fecha:** 2026-06-14  
 **Repositorio:** `/home/m1txel/Escritorio/Zonas-Roles-Review`  
-**URL producción:** https://michel-macias.github.io/Zonas-Roles_-am_Morea_PWA/  
+**URL producción:** https://michel-macias.github.io/PuestoYa_PWA/  
 **Stack actual:** HTML/CSS/JS vanilla + Firebase Realtime Database + Firebase Auth + Service Worker (PWA)  
 **Último commit relevante:** `6c17737` — fix(seguridad): restaurar funciones `showAdminPanel` y `hideAdminPanel`
 
@@ -46,7 +46,7 @@ La app cumple su propósito core: **sincronizar asignaciones de zonas en tiempo 
 |---|--------|-----------|---------|
 | 3.1 | **Reglas Firebase Realtime Database — endurecer** | 🔴 **Crítica** | Hoy: `.read: true` en `asignaciones` = **cualquiera lee todo el cuadrante** (nombres, estructura). Cambiar a: `.read: "auth != null"` + reglas por rol (camarero solo lee, admin escribe). |
 | 3.2 | **Firebase App Check** (reCAPTCHA v3 / DeviceCheck) | 🔴 **Alta** | Evita abuso de cuota Firebase (lecturas/escrituras ilimitadas desde bots). Gratis en plan Spark. |
-| 3.3 | **Eliminar auth "casera" (email @nam-zonas.local)** → usar **Firebase Auth con Email/Password real** + verificación email | 🔴 **Alta** | Hoy: contraseña = única barrera. Sin reset, sin rotación, sin MFA. Riesgo: credenciales compartidas, shoulder surfing. |
+| 3.3 | **Eliminar auth "casera" (email @puesto-ya.local)** → usar **Firebase Auth con Email/Password real** + verificación email | 🔴 **Alta** | Hoy: contraseña = única barrera. Sin reset, sin rotación, sin MFA. Riesgo: credenciales compartidas, shoulder surfing. |
 | 3.4 | **Content Security Policy (CSP) estricta** via `<meta http-equiv>` + headers en GitHub Pages (via `_headers` en Netlify/Cloudflare) | 🟡 **Media** | Mitiga XSS residual. Hoy: inline scripts, Google Fonts, Firebase CDN — CSP rompe si no se ajusta. |
 | 3.5 | **Sanitización DOMPurify** en lugar de `escapeHTML` casera | 🟡 **Media** | `escapeHTML` cubre básico pero no atributos `onclick`, `href="javascript:"`, SVG injection. DOMPurify (2KB gzip) = estándar. |
 | 3.6 | **Rate limiting escrituras** en cliente (debounce ya existe) + **Firebase Security Rules** `write` con `now < data.child('updatedAt').val() + 1000` | 🟢 **Baja** | Previene spam accidental (dedo en teclado) o malicioso. |
@@ -141,7 +141,7 @@ La app cumple su propósito core: **sincronizar asignaciones de zonas en tiempo 
 
 ## ⚠️ Riesgos y Decisiones Pendientes (Requieren input)
 
-1. **¿Multi-restaurante?** Hoy: single-tenant (Ñam Morea). Si escalar → multi-tenant en Firebase (subcollections `/restaurants/{id}/asignaciones`) + auth por tenant.
+1. **¿Multi-restaurante?** Hoy: single-tenant (PuestoYa). Si escalar → multi-tenant en Firebase (subcollections `/restaurants/{id}/asignaciones`) + auth por tenant.
 2. **¿Datos personales?** Nombres camareros = PII. ¿Consentimiento explícito? ¿Derecho olvido automático? → Definir política retención (ej: 90 días post-contrato).
 3. **¿Dispositivos compartidos?** iPad cocina/camareros. Hoy: logout manual. ¿Auto-logout por inactividad (5 min)? ¿PIN rápido en lugar de password?
 4. **¿Coste Firebase?** Plan Spark (gratis): 100 conexiones simultáneas, 1GB egress/mes. ¿Suficiente? Monitorizar en Sentry/Analytics.

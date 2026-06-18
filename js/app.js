@@ -5,10 +5,10 @@ import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, si
 // Credenciales inyectadas por el Director
 const firebaseConfig = {
   apiKey: "AIzaSyArHwZMlyz71o24VIj5yZlPxgswGpKJkVA",
-  authDomain: "nam-zonas.firebaseapp.com",
-  databaseURL: "https://nam-zonas-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "nam-zonas",
-  storageBucket: "nam-zonas.firebasestorage.app",
+  authDomain: "puesto-ya.firebaseapp.com",
+  databaseURL: "https://puesto-ya-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "puesto-ya",
+  storageBucket: "puesto-ya.firebasestorage.app",
   messagingSenderId: "491108708871",
   appId: "1:491108708871:web:1e275d78ac0d25de8330a2"
 };
@@ -64,7 +64,7 @@ function escapeHTML(str) {
 
 // --- SISTEMA DE AUTENTICACIÓN (FIREBASE AUTH) ---
 function getUserEmail(username) {
-    return `${username}@nam-zonas.local`;
+    return `${username}@puesto-ya.local`;
 }
 
 function initAuth() {

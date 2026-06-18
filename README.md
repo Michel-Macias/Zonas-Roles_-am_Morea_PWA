@@ -1,11 +1,11 @@
-# 🍔 Ñam Zonas PWA - Gestión de Roles y Turnos
+# 🍽️ PuestoYa PWA - Gestión de Roles y Turnos
 
 ![Version](https://img.shields.io/badge/version-1.0.0-E65100.svg)
 ![PWA](https://img.shields.io/badge/PWA-Ready-FFB300.svg)
 
-**🚀 Acceso a la App:** [**Abre la PWA aquí (Enlace Oficial)**](https://Michel-Macias.github.io/Zonas-Roles_-am_Morea_PWA/)
+**🚀 Acceso a la App:** [**Abre la PWA aquí (Enlace Oficial)**](https://Michel-Macias.github.io/PuestoYa_PWA/)
 
-Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para la gestión y asignación de zonas de trabajo en el restaurante **Ñam Morea**. 
+Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para la gestión y asignación de zonas de trabajo en restauración. 
 
 ## 🎯 Objetivo del Proyecto
 
@@ -38,7 +38,7 @@ Para que el personal pueda usar la app en su móvil, solo hay que habilitar GitH
 ## 🛠️ Estructura Técnica
 
 ```text
-📁 Zonas-Roles_Nam_Morea_PWA
+📁 PuestoYa_PWA
 ├── 📄 index.html      # Estructura principal y Modales de UI
 ├── 📄 manifest.json   # Configuración de instalación PWA
 ├── 📄 sw.js           # Service Worker para caché offline

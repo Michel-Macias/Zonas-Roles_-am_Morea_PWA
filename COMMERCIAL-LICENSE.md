@@ -1,4 +1,4 @@
-# Ñam Zonas — Licencia Comercial
+# PuestoYa — Licencia Comercial
 
 Este proyecto se publica bajo licencia MIT para facilitar su difusión, evaluación y despliegues de prueba.  
 Sin embargo, el uso en producción para locales de restauración/operaciones comerciales reales se rige por las condiciones de uso comercial descritas en este documento y por cualquier contrato o acuerdo firmado con `Michel-Macias`.
@@ -21,7 +21,7 @@ Se entiende por uso comercial cualquier despliegue en producción (IP/dominio p�
 
 ### 3. Restricciones generales
 - No se permite ingeniería inversa con fines de reventa.
-- No se permite uso de la marca Ñam sin licencia de marca separada.
+- No se permite uso de la marca PuestoYa sin licencia de marca separada.
 - El soporte no incluye adaptaciones significativas nuevas a menos se pacte obra derivada.
 
 ### 4. Propiedad intelectual

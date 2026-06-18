@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nam-zonas-v2';
+const CACHE_NAME = 'puestoya-v2';
 const urlsToCache = [
   './',
   './index.html',
