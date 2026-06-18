@@ -3,9 +3,11 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-E65100.svg)
 ![PWA](https://img.shields.io/badge/PWA-Ready-FFB300.svg)
 
-**🚀 Acceso a la App:** [**Abre la PWA aquí (Enlace Oficial)**](https://Michel-Macias.github.io/PuestoYa_PWA/)
+**🚀 Demo de la App:** [**Abre la PWA aquí**](https://Michel-Macias.github.io/Zonas-Roles_-am_Morea_PWA/)
 
-Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para la gestión y asignación de zonas de trabajo en restauración. 
+Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para gestión y asignación de zonas de trabajo en restauración.
+
+> Estado actual: **MVP v1** en desarrollo activo. 
 
 ## 🎯 Objetivo del Proyecto
 
