@@ -1,0 +1,87 @@
+[
+  {
+    "id": "Z1",
+    "nombre": "Zona 1",
+    "ubicacion": "Barra - Sup Izquierda",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Reposición de material", "Apoyo a Zona 2"],
+    "equipamiento": ["Plancha 1", "Microondas 2"],
+    "flujos": {
+      "pide_a": ["Z2 (Cafés)"],
+      "da_soporte_a": ["Z2"]
+    }
+  },
+  {
+    "id": "Z2",
+    "nombre": "Zona 2",
+    "ubicacion": "Barra - Media Frontal",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Preparar cafés", "Preparar tortillas"],
+    "equipamiento": ["Cafetera 1"],
+    "flujos": {
+      "pide_a": ["Z1 (Zumos)", "Z4 (Sándwiches)"],
+      "da_soporte_a": ["Z1", "Z3"]
+    }
+  },
+  {
+    "id": "Z3",
+    "nombre": "Zona 3",
+    "ubicacion": "Barra - Sup Derecha",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Preparar tortillas", "Gestión Pulmón 3", "Reposición platos"],
+    "equipamiento": ["Plancha 2", "Micro 1"],
+    "flujos": {
+      "pide_a": ["Z2 (Cafés)", "Z1 (Zumos)", "Z4 (Bollos)"],
+      "da_soporte_a": ["Z2", "Z4"]
+    }
+  },
+  {
+    "id": "Z4",
+    "nombre": "Zona 4",
+    "ubicacion": "Esquina / Barra Lateral Derecha",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Gestión cámara fría", "Bollería"],
+    "equipamiento": ["Plancha 2", "Micro 1"],
+    "flujos": {
+      "pide_a": ["Z5 (Cafés)", "Z3 (Tortillas)"],
+      "da_soporte_a": ["Z3", "Z5"]
+    }
+  },
+  {
+    "id": "Z5",
+    "nombre": "Zona 5",
+    "ubicacion": "Caja / Esquina Inferior Derecha",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Cobro comedor"],
+    "equipamiento": ["Cafetera 2", "Caja Registradora"],
+    "flujos": {
+      "pide_a": ["Z3/Z4 (Tortillas)"],
+      "da_soporte_a": ["Z4", "Z6"]
+    }
+  },
+  {
+    "id": "Z6",
+    "nombre": "Zona 6",
+    "ubicacion": "Pasillo Central Inferior",
+    "mision_principal": "Atención al cliente de su zona",
+    "tareas_secundarias": ["Gestión vajilla", "Pulmones vasos/platos"],
+    "equipamiento": ["Plancha 1", "Micro 2"],
+    "flujos": {
+      "pide_a": ["Z1 (Zumos)", "Z3/Z4 (Tortillas)"],
+      "da_soporte_a": ["Z5", "Z7", "Comedor"]
+    }
+  },
+  {
+    "id": "Z7",
+    "nombre": "Zona 7",
+    "ubicacion": "Esquina Inferior Izquierda / Fregadero",
+    "mision_principal": "Soporte logístico y limpieza",
+    "tareas_secundarias": ["Recorrido carro vajilla", "Limpieza sillas comedor"],
+    "equipamiento": ["Carro de vajilla", "Lavavajillas 1 y 2"],
+    "notas_especiales": "Rota cada 2 horas. No atención directa.",
+    "flujos": {
+      "pide_a": ["Z1/Z2 (Zumos y reposición si desborda)"],
+      "da_soporte_a": ["Z1", "Z6", "Comedor"]
+    }
+  }
+]
