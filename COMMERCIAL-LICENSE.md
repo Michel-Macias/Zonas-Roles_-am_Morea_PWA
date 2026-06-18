@@ -1,8 +1,7 @@
 # Ñam Zonas — Licencia Comercial
 
-## Licencia de Uso Comercial (Contrato)
-
-Esta licencia aplica cuando Ñam Zonas se usa en producción para locales de restauración o se integra en operaciones comerciales reales.
+Este proyecto se publica bajo licencia MIT para facilitar su difusión, evaluación y despliegues de prueba.  
+Sin embargo, el uso en producción para locales de restauración/operaciones comerciales reales se rige por las condiciones de uso comercial descritas en este documento y por cualquier contrato o acuerdo firmado con `Michel-Macias`.
 
 ### 1. Ámbito
 Se entiende por uso comercial cualquier despliegue en producción (IP/dominio público, intranet de negocio, uso por trabajadores en tiempo real) aunque no se facture a terceros.
