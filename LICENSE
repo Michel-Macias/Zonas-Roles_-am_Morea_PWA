@@ -1,21 +1,74 @@
-MIT License
+# PuestoYa — Licencia de Código Fuente (Source-Available)
 
-Copyright (c) 2026 Michel Macias (M1txel)
+**Versión:** 1.0  
+**Fecha de vigencia:** 2026-06-18  
+**Titular:** Michel Macias (M1txel) — github.com/Michel-Macias
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+---
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 1. Definiciones
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- **"El Software"**: el código fuente, assets, documentación y configuración contenidos en este repositorio.
+- **"Uso No Comercial"**: evaluación personal, aprendizaje, contribuciones al proyecto, despliegues de prueba sin usuarios reales, y desarrollo académico.
+- **"Uso Comercial"**: cualquier despliegue en producción (IP/dominio público, intranet de negocio, uso por trabajadores en tiempo real) para locales de restauración u operaciones comerciales, independientemente de si se factura a terceros.
+- **"Servicio Hosted"**: la instancia de PuestoYa operada por el Titular en sus dominios oficiales.
+
+---
+
+## 2. Derechos concedidos (Uso No Comercial)
+
+Se concede a cualquier persona, de forma gratuita, permiso para:
+
+- Visualizar, estudiar y aprender del código fuente.
+- Ejecutar el Software en entornos locales o de desarrollo para evaluación.
+- Bifurcar (fork) y modificar el código para contribuciones al proyecto original.
+- Utilizar el Software con fines académicos o de formación.
+
+---
+
+## 3. Restricciones (Uso Comercial)
+
+El uso comercial del Software **requiere una licencia comercial** por escrito emitida por el Titular. Sin dicha licencia:
+
+- ❌ No está permitido desplegar el Software en producción para uso real por trabajadores o clientes.
+- ❌ No está permitido ofrecer el Software como servicio (SaaS) a terceros.
+- ❌ No está permitido redistribuir, sublicenciar ni revender el Software o derivados con fines comerciales.
+- ❌ No está permitido utilizar la marca "PuestoYa", sus logotipos, ni su identidad visual sin autorización expresa.
+
+---
+
+## 4. Modalidades de Licencia Comercial
+
+El Titular ofrece licencias comerciales bajo las siguientes modalidades:
+
+### A. Suscripción SaaS
+- Acceso al Servicio Hosted operado por el Titular.
+- Incluye actualizaciones, soporte, y alojamiento.
+- Facturación mensual o anual por restaurante/local.
+
+### B. Licencia On-Premise (compra única)
+- Derecho a desplegar el Software en infraestructura propia del cliente.
+- Incluye 1 año de actualizaciones de seguridad y soporte básico.
+- Renovación anual opcional para actualizaciones de funcionalidad.
+- No incluye derecho a sublicenciar ni redistribuir.
+
+Para solicitar una licencia comercial, contactar a: **github.com/Michel-Macias**
+
+---
+
+## 5. Propiedad Intelectual
+
+- El código fuente, la arquitectura, el diseño y la marca "PuestoYa" son propiedad de Michel Macias.
+- Las contribuciones de terceros al repositorio se entienden cedidas bajo esta misma licencia, salvo acuerdo escrito distinto.
+
+---
+
+## 6. Exclusión de Garantía
+
+EL SOFTWARE SE PROPORCIONA "TAL CUAL", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITÁNDOSE A GARANTÍAS DE COMERCIALIZACIÓN, ADECUACIÓN A UN PROPÓSITO PARTICULAR O NO INFRACCIÓN. EN NINGÚN CASO EL TITULAR SERÁ RESPONSABLE DE DAÑOS DERIVADOS DEL USO DEL SOFTWARE.
+
+---
+
+## 7. Legislación aplicable
+
+Esta licencia se rige por la legislación española. Cualquier controversia se someterá a los juzgados y tribunales de Navarra, España.
