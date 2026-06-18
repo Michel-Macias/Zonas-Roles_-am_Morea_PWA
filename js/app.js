@@ -17,6 +17,18 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
+// 🛡️ Firebase App Check (protección anti-bot)
+// INSTRUCCIONES: Para activar App Check:
+// 1. Ve a https://console.firebase.google.com → tu proyecto → App Check
+// 2. Registra tu app web con reCAPTCHA v3 (te dará una "Site Key")
+// 3. Descomenta las 3 líneas siguientes y pega tu Site Key
+//
+// import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check.js";
+// const appCheck = initializeAppCheck(app, {
+//   provider: new ReCaptchaV3Provider('TU_RECAPTCHA_SITE_KEY'),
+//   isTokenAutoRefreshEnabled: true
+// });
+
 // Estado de la memoria central (SOT)
 let currentAsignaciones = {};
 
@@ -44,6 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAdminInputs();
         renderCamareros();
         updateModalIfOpen();
+    });
+
+    // Indicador de conexión 🟢/🔴
+    const connectedRef = ref(db, '.info/connected');
+    onValue(connectedRef, (snap) => {
+        const statusEl = document.getElementById('connection-status');
+        if (!statusEl) return;
+        const isOnline = snap.val() === true;
+        statusEl.classList.toggle('online', isOnline);
+        statusEl.classList.toggle('offline', !isOnline);
+        statusEl.querySelector('.status-text').textContent = isOnline ? 'Online' : 'Offline';
     });
 });
 
