@@ -2,15 +2,15 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getDatabase, ref, onValue, set, remove, get } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Credenciales DEMO (no usar en producción real)
+// Credenciales de Firebase de producción (Proyecto Original: nam-zonas)
 const firebaseConfig = {
-  apiKey: "DEMO_API_KEY",
-  authDomain: "puesto-ya-demo.firebaseapp.com",
-  databaseURL: "https://puesto-ya-demo-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "puesto-ya-demo",
-  storageBucket: "puesto-ya-demo.firebasestorage.app",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000000000"
+  apiKey: "AIzaSyArHwZMlyz71o24VIj5yZlPxgswGpKJkVA",
+  authDomain: "nam-zonas.firebaseapp.com",
+  databaseURL: "https://nam-zonas-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "nam-zonas",
+  storageBucket: "nam-zonas.firebasestorage.app",
+  messagingSenderId: "491108708871",
+  appId: "1:491108708871:web:1e275d78ac0d25de8330a2"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -64,7 +64,7 @@ function escapeHTML(str) {
 
 // --- SISTEMA DE AUTENTICACIÓN (FIREBASE AUTH) ---
 function getUserEmail(username) {
-    return `${username}@puesto-ya.local`;
+    return `${username}@nam-zonas.local`;
 }
 
 function initAuth() {
