@@ -1,16 +1,12 @@
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from './firebase';
 import { showAdminPanel, hideAdminPanel } from './ui';
-
-function getUserEmail(username: string): string {
-    return `${username}@nam-zonas.local`;
-}
 
 export function initAuth() {
     // Escucha en tiempo real el estado de autenticación de Firebase
     onAuthStateChanged(auth, (firebaseUser) => {
         if (firebaseUser && firebaseUser.email) {
-            const username = firebaseUser.email.split('@')[0];
+            const username = firebaseUser.email; // Mostramos el email completo
             showAdminPanel(username);
         } else {
             hideAdminPanel();
@@ -20,13 +16,18 @@ export function initAuth() {
     const btnLogin = document.getElementById('btn-login') as HTMLButtonElement;
     if (btnLogin) {
         btnLogin.addEventListener('click', async () => {
-            const userInput = document.getElementById('login-user') as HTMLSelectElement;
+            const emailInput = document.getElementById('login-email') as HTMLInputElement;
             const passInput = document.getElementById('login-pass') as HTMLInputElement;
             const errorDiv = document.getElementById('login-error') as HTMLDivElement;
             
-            const user = userInput.value;
+            const email = emailInput.value.trim();
             const pass = passInput.value.trim();
             
+            if (!email || !email.includes('@')) {
+                errorDiv.textContent = "Introduce un correo electrónico válido.";
+                errorDiv.style.display = 'block';
+                return;
+            }
             if (!pass) {
                 errorDiv.textContent = "Introduce una contraseña.";
                 errorDiv.style.display = 'block';
@@ -38,7 +39,6 @@ export function initAuth() {
                 return;
             }
             
-            const email = getUserEmail(user);
             btnLogin.textContent = "Comprobando...";
             btnLogin.disabled = true;
             errorDiv.style.display = 'none';
@@ -71,6 +71,34 @@ export function initAuth() {
             } finally {
                 btnLogin.textContent = "Entrar al Panel";
                 btnLogin.disabled = false;
+            }
+        });
+    }
+
+    const btnForgot = document.getElementById('btn-forgot-password');
+    if (btnForgot) {
+        btnForgot.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const emailInput = document.getElementById('login-email') as HTMLInputElement;
+            const errorDiv = document.getElementById('login-error') as HTMLDivElement;
+            const email = emailInput.value.trim();
+            
+            if (!email || !email.includes('@')) {
+                errorDiv.textContent = "Introduce tu correo electrónico arriba para poder restablecer la contraseña.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                errorDiv.style.color = '#166534'; // Verde
+                errorDiv.textContent = "Te hemos enviado un correo para restablecer la contraseña.";
+                errorDiv.style.display = 'block';
+                setTimeout(() => { errorDiv.style.color = 'var(--danger)'; }, 5000); // Volver al rojo
+            } catch (error: any) {
+                errorDiv.textContent = "No pudimos enviar el correo de recuperación.";
+                errorDiv.style.display = 'block';
+                console.error("Reset pwd error", error);
             }
         });
     }
