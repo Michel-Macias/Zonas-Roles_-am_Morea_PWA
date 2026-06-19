@@ -6,6 +6,8 @@ export function showAdminPanel(username: string) {
     document.getElementById('admin-content')?.classList.remove('hidden');
     const el = document.getElementById('logged-user-name');
     if(el) el.textContent = username;
+    const cfgBtn = document.getElementById('btn-restaurant-config');
+    if(cfgBtn) cfgBtn.style.display = 'inline-flex';
 }
 
 export function hideAdminPanel() {
@@ -178,4 +180,48 @@ export function renderAll() {
     updateAdminInputs();
     renderCamareros();
     updateModalIfOpen();
+}
+
+export function initRestaurantNameConfig() {
+    const btn = document.getElementById('btn-restaurant-config');
+    const modal = document.getElementById('modal-restaurant-config') as HTMLDialogElement | null;
+    const form = document.getElementById('form-restaurant-name') as HTMLFormElement | null;
+    const input = document.getElementById('input-restaurant-name') as HTMLInputElement | null;
+    const errorEl = document.getElementById('restaurant-config-error');
+
+    if(!btn || !modal || !form || !input || !errorEl) return;
+
+    btn.addEventListener('click', () => {
+        errorEl.style.display = 'none';
+        const current = (document.getElementById('restaurant-name-badge')?.textContent || '').trim();
+        input.value = current;
+        modal.showModal();
+    });
+
+    document.querySelector('#modal-restaurant-config .close-modal')?.addEventListener('click', () => modal.close());
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.style.display = 'none';
+        const name = input.value.trim();
+        if(!name) {
+            errorEl.textContent = 'El nombre no puede estar vacío.';
+            errorEl.style.display = 'block';
+            return;
+        }
+
+        try {
+            const { set } = await import('firebase/database');
+            const { db } = await import('./firebase');
+            const { activeRestaurantId } = await import('./zones');
+            await set(db, `restaurants/${activeRestaurantId}/config/name`, name);
+            const badge = document.getElementById('restaurant-name-badge');
+            if(badge) badge.textContent = name;
+            modal.close();
+        } catch(err) {
+            console.error('Error guardando nombre de restaurante', err);
+            errorEl.textContent = 'Error al guardar. Revisa tu conexión e inténtalo de nuevo.';
+            errorEl.style.display = 'block';
+        }
+    });
 }

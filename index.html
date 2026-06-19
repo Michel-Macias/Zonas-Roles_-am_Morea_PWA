@@ -14,6 +14,7 @@
         <div class="logo-container">
             <h1 class="logo">Puesto<span>Ya</span></h1>
             <span id="restaurant-name-badge" class="restaurant-badge" style="margin-left: 10px; padding: 4px 10px; background: rgba(230, 81, 0, 0.1); color: var(--primary); border: 1px solid rgba(230, 81, 0, 0.2); border-radius: 20px; font-size: 0.8rem; font-weight: 700;">demo-restaurant</span>
+        <button id="btn-restaurant-config" class="icon-btn" type="button" title="Configurar nombre del restaurante" style="display:none; background: transparent; border: none; cursor: pointer; margin-left: 6px; font-size: 1rem;">⚙️</button>
         </div>
         <nav class="tabs">
             <button class="tab-btn active" data-target="view-camarero">Camareros</button>
@@ -203,6 +204,22 @@
                     </ul>
                 </div>
             </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL CONFIGURACIÓN NOMBRE RESTAURANTE -->
+    <dialog id="modal-restaurant-config" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">⚙️ Configuración del Restaurante</h2>
+            <form id="form-restaurant-name" style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Nombre del Restaurante</label>
+                    <input type="text" id="input-restaurant-name" required minlength="1" placeholder="Ej: La Taberna del Sur" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                </div>
+                <button type="submit" style="width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:900; font-size:1.05rem; cursor:pointer;">Guardar</button>
+            </form>
+            <div id="restaurant-config-error" style="color:var(--danger); margin-top:10px; font-weight:700; display:none;"></div>
         </div>
     </dialog>
 
