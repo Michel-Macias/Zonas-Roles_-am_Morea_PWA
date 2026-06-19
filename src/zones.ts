@@ -1,4 +1,4 @@
-import { ref, onValue, set, remove } from 'firebase/database';
+import { ref, onValue, set, remove, get } from 'firebase/database';
 import { db } from './firebase';
 import zonasData from './data/zones.json';
 
@@ -20,10 +20,42 @@ export interface Zona {
 export const getZonesData = (): Zona[] => zonasData as Zona[];
 
 export let currentAsignaciones: Record<string, string> = {};
+export let activeRestaurantId: string = localStorage.getItem('active_restaurant_id') || 'demo-restaurant';
+
+let unsubscribeAssignments: (() => void) | null = null;
+let lastOnUpdate: (() => void) | null = null;
+
+export function setRestaurantId(id: string) {
+    activeRestaurantId = id;
+    localStorage.setItem('active_restaurant_id', id);
+    if (lastOnUpdate) {
+        initZones(lastOnUpdate);
+    }
+}
 
 export function initZones(onUpdate: () => void) {
-    const asignacionesRef = ref(db, 'asignaciones');
-    onValue(asignacionesRef, (snapshot) => {
+    lastOnUpdate = onUpdate;
+    if (unsubscribeAssignments) {
+        unsubscribeAssignments();
+    }
+
+    // Leer nombre del restaurante para actualizar la insignia en el header
+    get(ref(db, `restaurants/${activeRestaurantId}/config/name`)).then((snap) => {
+        const restName = snap.val() || activeRestaurantId;
+        const badge = document.getElementById('restaurant-name-badge');
+        if (badge) {
+            badge.textContent = restName;
+        }
+    }).catch(err => {
+        console.error("Error al obtener nombre de restaurante", err);
+        const badge = document.getElementById('restaurant-name-badge');
+        if (badge) {
+            badge.textContent = activeRestaurantId;
+        }
+    });
+
+    const asignacionesRef = ref(db, `restaurants/${activeRestaurantId}/assignments`);
+    unsubscribeAssignments = onValue(asignacionesRef, (snapshot) => {
         currentAsignaciones = snapshot.val() || {};
         onUpdate();
     });
@@ -44,9 +76,9 @@ export function initZones(onUpdate: () => void) {
 }
 
 export function saveAsignacion(id: string, name: string) {
-    set(ref(db, 'asignaciones/' + id), name);
+    set(ref(db, `restaurants/${activeRestaurantId}/assignments/` + id), name);
 }
 
 export function clearAssignments() {
-    remove(ref(db, 'asignaciones'));
+    remove(ref(db, `restaurants/${activeRestaurantId}/assignments`));
 }

@@ -2,15 +2,15 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
 
-// Credenciales de Firebase de producción (Proyecto Original: nam-zonas)
+// Credenciales de Firebase cargadas dinámicamente desde variables de entorno (.env)
 const firebaseConfig = {
-  apiKey: "AIzaSyArHwZMlyz71o24VIj5yZlPxgswGpKJkVA",
-  authDomain: "nam-zonas.firebaseapp.com",
-  databaseURL: "https://nam-zonas-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "nam-zonas",
-  storageBucket: "nam-zonas.firebasestorage.app",
-  messagingSenderId: "491108708871",
-  appId: "1:491108708871:web:1e275d78ac0d25de8330a2"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 export const app = initializeApp(firebaseConfig);

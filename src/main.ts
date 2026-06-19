@@ -1,8 +1,15 @@
 import { initAuth } from './auth';
 import { initTabs, initModals, renderAdmin, renderCamareros, renderAll } from './ui';
-import { initZones } from './zones';
+import { initZones, setRestaurantId } from './zones';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Extraer parámetro de restaurante de la URL (?r=xxxx) si existe
+    const params = new URLSearchParams(window.location.search);
+    const rParam = params.get('r');
+    if (rParam) {
+        setRestaurantId(rParam.trim());
+    }
+
     // Inicializar UI pura
     initTabs();
     initModals();

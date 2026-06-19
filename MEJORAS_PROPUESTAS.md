@@ -1,5 +1,8 @@
 # 🚀 Plan de Evolución — PuestoYa PWA → SaaS Multi-Restaurante
 
+> [!NOTE]
+> **Metodología de Desarrollo:** Las fases y tareas aquí descritas representan la hoja de ruta estratégica de alto nivel (*roadmap*). La especificación técnica exacta, los escenarios de prueba Gherkin y los checklists de control para la IA se implementan mediante **OpenSpec / SDD** en el directorio [openspec/](file:///home/m1txel/Escritorio/Zonas-Roles-Review/openspec/).
+
 **Fecha:** 2026-06-18  
 **Repositorio:** `/home/m1txel/Escritorio/Zonas-Roles-Review`  
 **Rama activa:** `fix/local-firebase-credentials`  

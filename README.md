@@ -1,54 +1,76 @@
-# 🍽️ PuestoYa PWA - Gestión de Roles y Turnos
+# 🍽️ PuestoYa PWA - Gestión SaaS de Roles y Turnos
 
-![Version](https://img.shields.io/badge/version-1.0.0-E65100.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-E65100.svg)
 ![PWA](https://img.shields.io/badge/PWA-Ready-FFB300.svg)
+![SDD](https://img.shields.io/badge/Methodology-OpenSpec%20%2F%20SDD-8B5CF6.svg)
 
-**🚀 Demo de la App:** [**Abre la PWA aquí**](https://Michel-Macias.github.io/Zonas-Roles_-am_Morea_PWA/)
+Plataforma Web Progresiva (PWA) de gestión y asignación de puestos de trabajo para hostelería en tiempo real, migrada a arquitectura **SaaS multi-restaurante**.
 
-Plataforma Web Progresiva (PWA) diseñada con estrategia **Mobile First** para gestión y asignación de zonas de trabajo en restauración.
+---
 
-> Estado actual: **MVP v1** en desarrollo activo. 
+## 🚀 Características del Proyecto
 
-## 🎯 Objetivo del Proyecto
+*   **⚡ Arquitectura Moderna:** Construida en Vanilla TypeScript modularizada y compilada con **Vite**.
+*   **🏢 Multi-tenant (SaaS):** Datos de asignaciones y miembros aislados en Firebase Realtime Database bajo la ruta `/restaurants/{restaurantId}/`.
+*   **🔑 Registro Seguro:** Autenticación gestionada con **Firebase Auth** real, incorporando un flujo obligatorio de verificación de email.
+*   **📱 Acceso Simple para Camareros:** Los camareros acceden a su panel de forma inmediata mediante un enlace con parámetro query: `?r={restaurantId}` (sin necesidad de loguearse).
+*   **🟢/🔴 Sincronización en Directo:** Conexión en tiempo real con indicador de estado (Online/Offline) e IndexedDB en Service Worker para soporte offline.
 
-En el trepidante entorno de la hostelería, la coordinación es clave. Esta aplicación digitaliza el plano del local y asigna de manera visual y estructurada las responsabilidades de cada camarero según la zona de la barra o comedor en la que se encuentre.
+---
 
-Permite consultar en tiempo real:
-- **El flujo de dependencias:** Qué material pedir a qué compañero.
-- **Las zonas de apoyo:** A qué áreas se debe brindar soporte en momentos de *rush*.
-- **Misión y Equipamiento:** Responsabilidad principal y herramientas disponibles en cada cuadrante.
+## 🛠️ Stack Tecnológico
 
-## ✨ Características Principales
+*   **Lenguaje:** TypeScript (Vanilla TS)
+*   **Bundler:** Vite
+*   **Backend & DB:** Firebase Realtime Database & Firebase Auth
+*   **Estilos:** Vanilla CSS (variables de entorno CSS, design tokens)
+*   **Gestión de Cambios:** OpenSpec (Spec-Driven Development)
 
-*   **⚡ Arquitectura Vanilla JS + Firebase:** Construida en HTML/CSS/JS nativo. Ahora utiliza **Firebase Realtime Database** para sincronizar automáticamente el panel del administrador con todos los dispositivos móviles al instante.
-*   **📱 PWA y Modo Offline:** Integración de Service Workers y `manifest.json`. La aplicación es instalable como una App nativa.
-*   **🎨 Diseño "SaaS Light":** Interfaz re-diseñada bajo una filosofía de "SaaS Productivity". Interfaz luminosa y profesional para mejorar la visibilidad, legibilidad y facilidad de uso durante turnos ajetreados.
-*   **👥 Panel Dual Sincronizado:**
-    *   **Vista Admin (Segura):** Protegido por sistema de contraseña First-Time con cifrado (SHA-256 Web Crypto API). Los responsables (`enc_1`, `enc_2`, `gerente`) pueden asignar al personal en vivo.
-    *   **Vista Camarero (Lectura):** Cuadrícula donde los camareros comprueban en tiempo real qué zona les toca, sin necesitar refrescar la página en ningún momento.
-*   **📖 Manuales Contextuales:** Botones integrados que muestran manuales rápidos (Modales) para ayudar a cualquier empleado, nuevo o veterano, a entender la lógica de la App de un vistazo.
+---
 
-## 🚀 Despliegue Rápido (GitHub Pages)
+## 💻 Desarrollo Local
 
-Para que el personal pueda usar la app en su móvil, solo hay que habilitar GitHub Pages:
-1. Ve a la pestaña **Settings** del repositorio.
-2. En la barra lateral izquierda haz clic en **Pages**.
-3. En la sección *Build and deployment*, bajo "Source", selecciona **Deploy from a branch**.
-4. Selecciona la rama `main` y guarda.
-5. ¡Listo! En un par de minutos tendrás el enlace público. Desde ese enlace, cualquier camarero puede usar la opción "Añadir a la pantalla de inicio" de su móvil para instalar la App.
+### 1. Requisitos
+Tener instalado Node.js (v18 o superior) y npm.
 
-## 🛠️ Estructura Técnica
+### 2. Configurar Variables de Entorno
+Crea un archivo `.env` en la raíz del proyecto (ignorado en git) y añade tus credenciales de Firebase:
+```env
+VITE_FIREBASE_API_KEY="TU_API_KEY"
+VITE_FIREBASE_AUTH_DOMAIN="TU_AUTH_DOMAIN"
+VITE_FIREBASE_DATABASE_URL="TU_DATABASE_URL"
+VITE_FIREBASE_PROJECT_ID="TU_PROJECT_ID"
+VITE_FIREBASE_STORAGE_BUCKET="TU_STORAGE_BUCKET"
+VITE_FIREBASE_MESSAGING_SENDER_ID="TU_MESSAGING_SENDER_ID"
+VITE_FIREBASE_APP_ID="TU_APP_ID"
+```
 
-```text
-📁 PuestoYa_PWA
-├── 📄 index.html      # Estructura principal y Modales de UI
-├── 📄 manifest.json   # Configuración de instalación PWA
-├── 📄 sw.js           # Service Worker para caché offline
-├── 📁 css
-│   └── 📄 style.css   # Sistema de diseño basado en Variables CSS
-└── 📁 js
-    └── 📄 app.js      # Lógica de renderizado JSON y LocalStorage
+### 3. Instalar y Levantar
+```bash
+# Instalar dependencias
+npm install
+
+# Levantar servidor de desarrollo local (Vite)
+npm run dev
+
+# Compilar para producción
+npm run build
 ```
 
 ---
-*Diseñado e implementado con arquitectura agentica por **Nex-OS (Shadow Agent)** bajo la dirección de **Michel**.*
+
+## 📐 Ciclo de Desarrollo (OpenSpec / SDD)
+
+Este proyecto utiliza el framework **OpenSpec** para asegurar que cada desarrollo esté guiado por especificaciones estrictas e inalterables antes de tocar código:
+
+1. **Constitución:** Definida en [openspec/project.md](file:///home/m1txel/Escritorio/Zonas-Roles-Review/openspec/project.md) (restricciones de stack y estilo).
+2. **Propuesta:** Crear un cambio en `openspec/changes/{nombre-cambio}/` que contenga:
+    *   `proposal.md` (El qué y el porqué)
+    *   `specs/spec.md` (Comportamiento con escenarios Gherkin)
+    *   `design.md` (Estrategia técnica)
+    *   `tasks.md` (Lista de tareas atómicas de 1-2h)
+3. **Ejecución:** La IA o el desarrollador implementan siguiendo estrictamente `tasks.md`.
+4. **Archivo:** Al finalizar, el comando `openspec archive` fusiona las delta specs con la documentación viva de [openspec/specs/](file:///home/m1txel/Escritorio/Zonas-Roles-Review/openspec/specs/) y mueve el cambio a histórico.
+
+---
+*Mantenido y desarrollado mediante el framework SDD en Antigravity IDE.*
