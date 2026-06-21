@@ -1,5 +1,5 @@
 import { escapeHTML } from './utils';
-import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl } from './zones';
+import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl, activeRestaurantId } from './zones';
 import { renderZonesList } from './admin/zones';
 import { initZoneForm } from './admin/zone-form';
 import { renderFloorplan, initFloorplanToolbar } from './admin/floorplan-editor';
@@ -102,14 +102,20 @@ export function updateAdminInputs() {
     });
 }
 
+function getMiZonaId(): string | null {
+    return localStorage.getItem('puestoya_mi_zona_' + activeRestaurantId);
+}
+
 export function renderCamareros() {
     const container = document.getElementById('grid-zonas-camarero');
     if(!container) return;
     const zonasData = getZonesData();
+    const miZonaId = getMiZonaId();
     container.innerHTML = zonasData.map(z => {
         const asignado = currentAsignaciones[z.id];
+        const isMiZona = z.id === miZonaId;
         return `
-            <div class="zona-card ${asignado ? 'has-asignado' : ''}" data-id="${z.id}">
+            <div class="zona-card ${asignado ? 'has-asignado' : ''} ${isMiZona ? 'is-mi-zona' : ''}" data-id="${z.id}">
                 <div class="zona-id">${z.id}</div>
                 <div class="zona-nombre">${escapeHTML(z.nombre)}</div>
                 ${asignado ? `<div class="zona-asignado">👤 ${escapeHTML(asignado)}</div>` : `<div class="zona-asignado" style="background:transparent;color:var(--text-muted);border:1px solid var(--border-color);">Sin asignar</div>`}
@@ -142,13 +148,23 @@ export function showZonaModal(id: string) {
     } else {
         mapHtml = document.getElementById('plano-svg')?.outerHTML || '';
     }
-    
+
+    const isMiZona = id === getMiZonaId();
+    const btnText = isMiZona ? '⭐ Quitar de mi zona' : '☆ Marcar como mi zona';
+    const btnStyle = isMiZona
+        ? 'background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8;'
+        : 'background: var(--bg-card); border-color: var(--border-color); color: var(--text-muted);';
+
     const html = `
         <div class="modal-body-zona">
             <h2>${zona.id} - ${escapeHTML(zona.nombre)}</h2>
             <p style="color:var(--text-muted); margin-bottom:10px; font-size:0.95rem; font-weight:500;">📍 ${escapeHTML(zona.ubicacion)}</p>
             <p style="font-size: 1.1rem; margin-bottom: 15px;"><strong>👤 Camarero/a:</strong> <span style="color:var(--primary-hover); font-weight:800;">${escapeHTML(asignado)}</span></p>
             
+            <button id="btn-toggle-mi-zona" class="btn-manual" style="margin-top: 5px; margin-bottom: 15px; width: 100%; font-weight: 600; display: inline-flex; justify-content: center; align-items: center; gap: 6px; ${btnStyle}" data-zone-id="${id}">
+                ${btnText}
+            </button>
+
             <div class="modal-map-container">
                 ${mapHtml}
             </div>
@@ -170,6 +186,20 @@ export function showZonaModal(id: string) {
     
     const bodyEl = document.getElementById('modal-body-zona');
     if(bodyEl) bodyEl.innerHTML = html;
+
+    const toggleBtn = document.getElementById('btn-toggle-mi-zona');
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+            const currentMiZona = getMiZonaId();
+            if (currentMiZona === id) {
+                localStorage.removeItem('puestoya_mi_zona_' + activeRestaurantId);
+            } else {
+                localStorage.setItem('puestoya_mi_zona_' + activeRestaurantId, id);
+            }
+            renderCamareros();
+            showZonaModal(id);
+        });
+    }
     
     const modalMap = document.querySelector('#modal-body-zona .plano-svg');
     if(modalMap) {

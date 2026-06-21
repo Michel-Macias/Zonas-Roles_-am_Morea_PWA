@@ -499,3 +499,31 @@ body {
     cursor: pointer;
 }
 
+/* Mi Zona Highlight */
+.zona-card.is-mi-zona {
+    border-color: #3B82F6 !important;
+    background-color: #EFF6FF !important;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25) !important;
+    position: relative;
+}
+.zona-card.is-mi-zona::after {
+    content: '⭐';
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.1rem;
+}
+
+.canvas-zone-block.is-mi-zona {
+    border-color: #3B82F6 !important;
+    background-color: rgba(59, 130, 246, 0.45) !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+}
+.canvas-zone-block.is-mi-zona::after {
+    content: '⭐';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 0.9rem;
+}
+
