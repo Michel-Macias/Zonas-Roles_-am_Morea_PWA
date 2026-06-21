@@ -211,10 +211,10 @@ export function initRestaurantNameConfig() {
         }
 
         try {
-            const { set } = await import('firebase/database');
+            const { set, ref } = await import('firebase/database');
             const { db } = await import('./firebase');
             const { activeRestaurantId } = await import('./zones');
-            await set(db, `restaurants/${activeRestaurantId}/config/name`, name);
+            await set(ref(db, `restaurants/${activeRestaurantId}/config/name`), name);
             const badge = document.getElementById('restaurant-name-badge');
             if(badge) badge.textContent = name;
             modal.close();
