@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PuestoYa - Organización de Zonas</title>
+    <link rel="manifest" href="/Zonas-Roles_-am_Morea_PWA/assets/manifest-i5o8Bht8.json">
+    <meta name="theme-color" content="#F9FAFB">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="/Zonas-Roles_-am_Morea_PWA/assets/index-Dqczg42O.js"></script>
+  <link rel="stylesheet" crossorigin href="/Zonas-Roles_-am_Morea_PWA/assets/index-BSajUUVg.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo-container">
+            <h1 class="logo">Puesto<span>Ya</span></h1>
+            <span id="restaurant-name-badge" class="restaurant-badge" style="margin-left: 10px; padding: 4px 10px; background: rgba(230, 81, 0, 0.1); color: var(--primary); border: 1px solid rgba(230, 81, 0, 0.2); border-radius: 20px; font-size: 0.8rem; font-weight: 700;">demo-restaurant</span>
+        <button id="btn-restaurant-config" class="icon-btn" type="button" title="Configurar nombre del restaurante" style="display:none; background: transparent; border: none; cursor: pointer; margin-left: 6px; font-size: 1rem;">⚙️</button>
+        </div>
+        <nav class="tabs">
+            <button class="tab-btn active" data-target="view-camarero">Camareros</button>
+            <button class="tab-btn" data-target="view-plano">Plano</button>
+            <button class="tab-btn" data-target="view-admin">Admin</button>
+            <button class="tab-btn" id="btn-normas">Normas</button>
+        </nav>
+        <div id="connection-status" class="connection-indicator offline" title="Estado de conexión">
+            <span class="status-dot"></span>
+            <span class="status-text">Offline</span>
+        </div>
+    </header>
+
+    <main class="app-content">
+        <!-- VISTA CAMARERO -->
+        <section id="view-camarero" class="view active">
+            <div class="intro-text">
+                <h2>Planificación del Turno</h2>
+                <p>Selecciona tu zona para ver tus responsabilidades y flujos de trabajo.</p>
+                <button class="btn-manual" onclick="document.getElementById('modal-manual-camarero').showModal()">📖 Manual de Uso (Camareros)</button>
+            </div>
+            
+            <!-- SELECTOR TURNO ACTIVO CAMARERO -->
+            <div style="margin: 1rem 0 1.5rem 0; display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-color); width: fit-content;">
+                <label for="select-active-shift-camarero" style="font-weight: 700; color: var(--secondary); margin-bottom: 0;">🕒 Turno:</label>
+                <select id="select-active-shift-camarero" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; color: var(--secondary);">
+                    <option value="">Cargando turnos...</option>
+                </select>
+            </div>
+
+            <div id="grid-zonas-camarero" class="zonas-grid">
+                <!-- Generado por JS -->
+            </div>
+        </section>
+
+        <!-- VISTA PLANO (DEDICADA) -->
+        <section id="view-plano" class="view hidden">
+            <!-- Barra de herramientas del plano (solo visible para admin/encargado cuando esté autenticado) -->
+            <div id="floorplan-toolbar" style="display: none; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                <span style="font-weight: 700; color: var(--secondary);">🗺️ Diseño del Plano</span>
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-edit-layout" class="btn-manual" style="background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8;">📐 Editar Distribución</button>
+                    <button id="btn-save-layout" class="btn-manual" style="background: #DCFCE7; border-color: #22C55E; color: #166534; display: none;">💾 Guardar Distribución</button>
+                    <button id="btn-cancel-layout" class="btn-manual" style="background: #FEE2E2; border-color: #EF4444; color: #991B1B; display: none;">✕ Cancelar</button>
+                </div>
+            </div>
+
+            <div class="plano-general-container">
+                <h3>🗺️ Plano General del Local</h3>
+                <p id="floorplan-edit-hint" style="display: none; text-align: center; color: var(--primary-hover); font-weight: 600; margin-bottom: 1rem; font-size: 0.9rem;">
+                    Arrastra las zonas para moverlas. Arrastra desde la esquina inferior derecha (tirador) para cambiar su tamaño.
+                </p>
+                
+                <!-- Lienzo dinámico (se llenará por JS si hay floorplanUrl) -->
+                <div id="floorplan-canvas" class="floorplan-canvas" style="display: none;">
+                    <!-- Zonas generadas dinámicamente -->
+                </div>
+
+                <!-- Fallback original (plano SVG estático) -->
+                <svg viewBox="0 0 800 620" id="plano-svg" class="plano-svg">
+                    
+                    <!-- COMEDOR (Abajo del todo) -->
+                    <rect x="20" y="520" width="760" height="80" class="map-dashed-element" rx="10"/>
+                    <text x="400" y="570" class="map-bg-text" font-size="28" text-anchor="middle" letter-spacing="4">COMEDOR</text>
+
+                    <!-- FILA 1: Z1, Z2, Z3 -->
+                    <g id="map-Z1" class="zona-group">
+                        <rect x="20" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="100" y="90" class="zona-text">ZONA 1</text>
+                        <text x="100" y="115" class="zona-label">Barra Sup Izq</text>
+                    </g>
+                    <g id="map-Z2" class="zona-group">
+                        <rect x="200" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="280" y="90" class="zona-text">ZONA 2</text>
+                        <text x="280" y="115" class="zona-label">Barra Media</text>
+                    </g>
+                    <g id="map-Z3" class="zona-group">
+                        <rect x="380" y="20" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="460" y="90" class="zona-text">ZONA 3</text>
+                        <text x="460" y="115" class="zona-label">Barra Sup Der</text>
+                    </g>
+
+                    <!-- LATERAL DERECHO: Z4 (Mitad superior), Z5 (Mitad inferior) -->
+                    <g id="map-Z4" class="zona-group">
+                        <rect x="560" y="20" width="220" height="225" class="zona-shape" rx="8"/>
+                        <text x="670" y="125" class="zona-text">ZONA 4</text>
+                        <text x="670" y="150" class="zona-label">Esquina / Frío</text>
+                    </g>
+                    <g id="map-Z5" class="zona-group">
+                        <rect x="560" y="265" width="220" height="225" class="zona-shape" rx="8"/>
+                        <text x="670" y="370" class="zona-text">ZONA 5</text>
+                        <text x="670" y="395" class="zona-label">Caja / Barra Inferior</text>
+                    </g>
+
+                    <!-- CENTRO: ISLA -->
+                    <rect x="200" y="180" width="340" height="150" class="map-bg-element" rx="8"/>
+                    <text x="370" y="255" class="map-bg-text" font-size="22" text-anchor="middle">ISLA CENTRAL</text>
+                    <text x="370" y="285" class="map-bg-text" font-size="14" text-anchor="middle" font-weight="normal">Cafeteras / Microondas</text>
+
+                    <!-- FILA INFERIOR: Z7, PASO, Z6 -->
+                    <g id="map-Z7" class="zona-group">
+                        <rect x="20" y="350" width="320" height="140" class="zona-shape" rx="8"/>
+                        <text x="180" y="420" class="zona-text">ZONA 7</text>
+                        <text x="180" y="445" class="zona-label">Fregadero / Apoyo</text>
+                    </g>
+                    
+                    <!-- PASO AL COMEDOR -->
+                    <path d="M 360 360 L 360 480" class="map-dashed-element" stroke-width="2" />
+                    <polygon points="353,470 367,470 360,482" fill="#D1D5DB" />
+                    <text x="350" y="420" class="map-bg-text" font-size="14" text-anchor="middle" transform="rotate(-90 350 420)">PASO</text>
+
+                    <g id="map-Z6" class="zona-group">
+                        <rect x="380" y="350" width="160" height="140" class="zona-shape" rx="8"/>
+                        <text x="460" y="420" class="zona-text">ZONA 6</text>
+                        <text x="460" y="445" class="zona-label">Pasillo Central</text>
+                    </g>
+                </svg>
+            </div>
+        </section>
+
+        <!-- VISTA ADMIN -->
+        <section id="view-admin" class="view hidden">
+            
+            <!-- FORMULARIO LOGIN -->
+            <div id="admin-login-container" style="max-width: 400px; margin: 2rem auto; background: var(--bg-card); padding: 2.5rem 2rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.05);">
+                <h2 style="margin-bottom: 0.5rem; color: var(--secondary); text-align: center; font-weight: 900;">Acceso Restringido</h2>
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem;">Solo encargados y gerencia</p>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="ejemplo@restaurante.com" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #D1D5DB; background: #F9FAFB; font-family: inherit; font-size: 1.05rem;">
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: var(--secondary);">Contraseña</label>
+                    <input type="password" id="login-pass" placeholder="Tu contraseña" style="width: 100%; padding: 14px; border-radius: 8px; border: 1px solid #D1D5DB; background: #F9FAFB; font-family: inherit; font-size: 1.05rem;">
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.9rem;">
+                        <small style="color: var(--primary-hover); font-weight: 500;">* Primer acceso = registro automático</small>
+                        <a href="#" id="btn-forgot-password" style="color: var(--secondary); text-decoration: underline; cursor: pointer;">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+                
+                <button id="btn-login" style="width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; transition: background 0.2s;">Entrar al Panel</button>
+                <div id="login-error" style="color: var(--danger); margin-top: 15px; text-align: center; font-weight: bold; display: none;">Contraseña incorrecta.</div>
+            </div>
+
+            <!-- CONTENIDO ADMIN (Oculto por defecto) -->
+            <div id="admin-content" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <p style="font-size: 1.1rem; color: var(--secondary); font-weight: bold;">👤 Hola, <span id="logged-user-name" style="color:var(--primary)"></span></p>
+                    <button id="btn-logout" style="padding: 8px 16px; background: #F1F5F9; border: 1px solid #CBD5E1; border-radius: 8px; cursor: pointer; color: #475569; font-weight: bold; transition: all 0.2s;">Cerrar Sesión</button>
+                </div>
+                
+                <!-- PANEL SUBIDA DE PLANO -->
+                <div class="floorplan-upload-panel">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--secondary); font-size: 1.1rem; font-weight: 700;">🗺️ Imagen del Plano Físico</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Sube la foto del plano de tu restaurante para usarla de referencia en los cuadrantes.</p>
+                    
+                    <div id="floorplan-dropzone" class="dropzone">
+                        <input type="file" id="floorplan-file-input" accept="image/png, image/jpeg" style="display: none;">
+                        <span class="upload-icon">📸</span>
+                        <p style="font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem;">Arrastra aquí la foto del plano o haz clic para buscar</p>
+                        <p style="font-size: 0.8rem; color: var(--text-muted);">Soporta formatos PNG, JPG (máx. 5MB)</p>
+                    </div>
+
+                    <div id="floorplan-progress-container" style="display: none; margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.25rem; font-weight: 600;">
+                            <span>Subiendo plano...</span>
+                            <span id="floorplan-progress-text">0%</span>
+                        </div>
+                        <div class="floorplan-progress-track">
+                            <div id="floorplan-progress-bar" class="floorplan-progress-bar"></div>
+                        </div>
+                    </div>
+
+                    <div id="floorplan-preview-container" style="display: none; margin-top: 1rem; text-align: center;">
+                        <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; text-align: left;">Vista previa del plano:</p>
+                        <div class="floorplan-preview-wrapper">
+                            <button id="btn-remove-floorplan" class="btn-remove-floorplan" title="Eliminar plano">✕</button>
+                            <img id="floorplan-preview" class="floorplan-preview-img" src="" alt="Plano del local">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- GESTIÓN DE ZONAS -->
+                <div class="intro-text">
+                    <h2>Gestión de Zonas</h2>
+                    <p>Crea, edita o elimina zonas del restaurante. Los cambios se aplican en tiempo real.</p>
+                    <button id="btn-add-zone" class="btn-manual" style="margin-top: 10px;">+ Nueva Zona</button>
+                </div>
+                <div id="zones-admin-list"></div>
+
+                <!-- GESTIÓN DE TURNOS -->
+                <div class="intro-text" style="margin-top: 2rem;">
+                    <h2>Gestión de Turnos</h2>
+                    <p>Crea, edita o elimina turnos para franjas horarias específicas del restaurante.</p>
+                    <button id="btn-add-shift" class="btn-manual" style="margin-top: 10px;">+ Nuevo Turno</button>
+                </div>
+                <div id="shifts-list-container" class="admin-grid" style="margin-top: 1rem; gap: 10px;">
+                    <!-- Generado por JS -->
+                </div>
+                
+                <div class="intro-text" style="margin-top: 2rem;">
+                    <h2>Asignación de Personal</h2>
+                    <p>Asigna los nombres a cada zona. Se sincronizará en tiempo real con todos los camareros.</p>
+                    <button class="btn-manual" onclick="document.getElementById('modal-manual-admin').showModal()" style="margin-top: 10px;">📖 Manual del Encargado</button>
+                </div>
+
+                <!-- SELECTOR TURNO ACTIVO ADMIN -->
+                <div style="margin: 1.5rem 0; display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <label for="select-active-shift-admin" style="font-weight: 700; color: var(--secondary); margin-bottom: 0;">🕒 Turno Activo Actual:</label>
+                    <select id="select-active-shift-admin" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; color: var(--secondary); min-width: 200px;">
+                        <option value="">Cargando turnos...</option>
+                    </select>
+                </div>
+                
+                <div id="grid-zonas-admin" class="admin-grid">
+                    <!-- Generado por JS -->
+                </div>
+                <button id="btn-clear-assignments" class="btn-danger">Limpiar Todas las Asignaciones</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DETALLE ZONA -->
+    <dialog id="modal-zona" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div id="modal-body-zona"></div>
+        </div>
+    </dialog>
+
+    <!-- MODAL FORMULARIO ZONA -->
+    <dialog id="modal-zone-form" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">📝 Zona</h2>
+            <form id="form-zone" style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Nombre *</label>
+                    <input type="text" id="zone-nombre" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                    <div id="zone-nombre-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Ubicación *</label>
+                    <input type="text" id="zone-ubicacion" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                    <div id="zone-ubicacion-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Misión Principal *</label>
+                    <textarea id="zone-mision" rows="2" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                    <div id="zone-mision-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Tareas Secundarias (una por línea)</label>
+                    <textarea id="zone-tareas" rows="3" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Equipamientos (una por línea)</label>
+                    <textarea id="zone-equipos" rows="3" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Flujos — Pide a (una por línea)</label>
+                    <textarea id="zone-pide-a" rows="2" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Flujos — Da soporte a (una por línea)</label>
+                    <textarea id="zone-da-soporte" rows="2" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <button type="submit" style="width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:900; font-size:1.05rem; cursor:pointer;">Guardar</button>
+            </form>
+            <div id="zone-form-error" style="color:var(--danger); margin-top:10px; font-weight:700; display:none;"></div>
+        </div>
+    </dialog>
+
+    <!-- MODAL NORMAS COMUNES -->
+    <dialog id="modal-normas" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">📋 Normas Comunes</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🧹 1. Orden y Limpieza</h3>
+                    <ul>
+                        <li>Mantener la zona de trabajo impecable.</li>
+                        <li>Desbarasar y limpiar inmediatamente superficies libres.</li>
+                        <li><strong>Regla Verde:</strong> Usar exclusivamente el liquido de limpieza y el paño verde.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>👥 2. Atención al Cliente</h3>
+                    <ul>
+                        <li>Saludo proactivo, contacto visual y sonrisa.</li>
+                        <li><strong>Prioridad Absoluta:</strong> El cliente es lo primero. Tareas logísticas son secundarias.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>⏱️ 3. Gestión de Tiempos y Eficiencia</h3>
+                    <ul>
+                        <li>Servir con agilidad sin comprometer presentación.</li>
+                        <li>Anticiparse a picos de trabajo (rush) pidiendo apoyo.</li>
+                        <li><strong>Regla de los 7 Clientes:</strong> Al no tener ayudante de camarero, cada 7 clientes atendidos se deben reponer pulmones y llevar vajilla sucia a cocina.</li>
+                        <li><strong>Viajes 100% Útiles:</strong> Se aprovecharán siempre los viajes para llevar o traer algo de/hacia la cocina (nunca caminar con las manos vacías).</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>📦 4. Reposición de Pulmones</h3>
+                    <ul>
+                        <li>Asegurar abastecimiento de vajilla, cristalería, pinchos y platos.</li>
+                        <li>Nunca llegar a cero. Reponer en momentos valle.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>🍽️ 5. Normativas de Vajilla (Crítico)</h3>
+                    <ul>
+                        <li><strong>PROHIBIDO</strong> apilar vajilla caliente.</li>
+                        <li>No mezclar vajilla fría con caliente.</li>
+                        <li>Pre-organizar elementos antes de enviar a Zona 7.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL CONFIGURACIÓN NOMBRE RESTAURANTE -->
+    <dialog id="modal-restaurant-config" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">⚙️ Configuración del Restaurante</h2>
+            <form id="form-restaurant-name" style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Nombre del Restaurante</label>
+                    <input type="text" id="input-restaurant-name" required minlength="1" placeholder="Ej: La Taberna del Sur" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                </div>
+                <button type="submit" style="width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:900; font-size:1.05rem; cursor:pointer;">Guardar</button>
+            </form>
+            <div id="restaurant-config-error" style="color:var(--danger); margin-top:10px; font-weight:700; display:none;"></div>
+        </div>
+    </dialog>
+
+    <!-- MODAL MANUAL CAMARERO -->
+    <dialog id="modal-manual-camarero" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--secondary); margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">📖 Manual del Camarero</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🎯 Objetivo de la App</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px;">Saber exactamente dónde te toca trabajar hoy y qué tareas tienes asignadas en tu zona.</p>
+                </div>
+                <div class="norma-item">
+                    <h3>📱 ¿Cómo se usa?</h3>
+                    <ol style="margin-left: 20px; color: var(--text-main); font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+                        <li>Abre la aplicación al llegar a tu turno.</li>
+                        <li>Busca tu nombre en las tarjetas blancas de abajo. Aparecerá en <span style="color:var(--primary-hover); font-weight:bold; background:var(--primary-light); padding: 2px 6px; border-radius:4px;">Naranja</span>.</li>
+                        <li><strong>Toca tu tarjeta</strong> para abrir tu plano de trabajo.</li>
+                        <li>Revisa con atención:
+                            <ul style="margin-top: 5px; margin-bottom: 5px;">
+                                <li>Tu ubicación exacta en el local.</li>
+                                <li>La maquinaria que debes controlar.</li>
+                                <li><strong>Flujos:</strong> A quién debes pedirle cosas (ej. cafés) y a quién debes ayudar.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <div class="norma-item" style="border-bottom: none;">
+                    <h3>⚡ Cambios en Directo</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px;">No necesitas recargar la página. Si el encargado te cambia de zona en mitad del servicio, tu pantalla se actualizará sola al instante.</p>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL MANUAL ADMIN -->
+    <dialog id="modal-manual-admin" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" style="top:10px; right:10px; z-index: 10;">&times;</button>
+            <h2 style="color:var(--secondary); margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">📖 Manual del Encargado</h2>
+            <div class="normas-body" style="max-height: 70vh; overflow-y: auto; padding-right: 10px;">
+                <div class="norma-item">
+                    <h3>🔐 Sobre el Acceso</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Selecciona tu perfil (enc_1, enc_2 o gerente). <strong>Importante:</strong> La contraseña que introduzcas la primera vez se registrará para siempre y protegerá tu perfil.</p>
+                </div>
+                <div class="norma-item">
+                    <h3>✍️ Asignar Personal</h3>
+                    <ul style="margin-left: 20px; color: var(--text-main); font-size: 0.95rem; margin-top: 10px; line-height: 1.8;">
+                        <li>Verás los campos de texto para las 7 zonas.</li>
+                        <li>Simplemente escribe el nombre del camarero/a.</li>
+                        <li><strong>No hay botón de guardar:</strong> Al dejar de teclear (medio segundo), el nombre se sube a la nube y aparece en los móviles de los camareros al instante.</li>
+                    </ul>
+                </div>
+                <div class="norma-item">
+                    <h3>🧹 Limpiar Turno</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Usa el botón rojo <strong>"Limpiar Todas las Asignaciones"</strong> al terminar el día. Esto vacía el cuadrante para el siguiente turno en todos los dispositivos.</p>
+                </div>
+                <div class="norma-item" style="border-bottom: none;">
+                    <h3>🚪 Cierre de Sesión</h3>
+                    <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Si usas un iPad compartido del restaurante, haz clic en "Cerrar Sesión" arriba a la derecha para que nadie modifique el cuadrante usando tu usuario.</p>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL FORMULARIO TURNO -->
+    <dialog id="modal-shift-form" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Formulario de Turno</h2>
+                <button class="close-modal">✕</button>
+            </div>
+            <form id="form-shift" class="form-grid">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="shift-nombre" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Nombre del Turno</label>
+                    <input type="text" id="shift-nombre" placeholder="Ej. Mañana, Tarde, Noche" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                    <span id="shift-nombre-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <label for="shift-hora-inicio" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Hora Inicio (HH:MM)</label>
+                        <input type="text" id="shift-hora-inicio" placeholder="08:00" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                        <span id="shift-hora-inicio-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="shift-hora-fin" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Hora Fin (HH:MM)</label>
+                        <input type="text" id="shift-hora-fin" placeholder="16:00" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                        <span id="shift-hora-fin-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                    </div>
+                </div>
+                <div id="shift-form-error" class="error-message" style="display: none; color: var(--danger); margin-bottom: 1rem; font-weight: bold;"></div>
+                <button type="submit" class="btn-submit" style="width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">💾 Guardar Turno</button>
+            </form>
+        </div>
+    </dialog>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>
