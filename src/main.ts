@@ -1,5 +1,5 @@
 import { initAuth } from './auth';
-import { initTabs, initModals, initRestaurantNameConfig, renderAdmin, renderCamareros, renderAll } from './ui';
+import { initTabs, initModals, initRestaurantNameConfig, initFloorplanUpload, renderAdmin, renderCamareros, renderAll } from './ui';
 import { initZones, setRestaurantId } from './zones';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Inicializar UI pura
     initTabs();
     initModals();
-	initRestaurantNameConfig();
+    initRestaurantNameConfig();
+    initFloorplanUpload();
     
     // 3. Inicializar estado inicial vacío
     renderAdmin();

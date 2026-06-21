@@ -1,5 +1,5 @@
 import { escapeHTML } from './utils';
-import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments } from './zones';
+import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl } from './zones';
 
 export function showAdminPanel(username: string) {
     document.getElementById('admin-login-container')?.classList.add('hidden');
@@ -180,6 +180,7 @@ export function renderAll() {
     updateAdminInputs();
     renderCamareros();
     updateModalIfOpen();
+    renderFloorplanPreview();
 }
 
 export function initRestaurantNameConfig() {
@@ -222,6 +223,194 @@ export function initRestaurantNameConfig() {
             console.error('Error guardando nombre de restaurante', err);
             errorEl.textContent = 'Error al guardar. Revisa tu conexión e inténtalo de nuevo.';
             errorEl.style.display = 'block';
+        }
+    });
+}
+
+export function renderFloorplanPreview() {
+    const previewContainer = document.getElementById('floorplan-preview-container');
+    const previewImg = document.getElementById('floorplan-preview') as HTMLImageElement | null;
+    const dropzone = document.getElementById('floorplan-dropzone');
+
+    if (!previewContainer || !previewImg || !dropzone) return;
+
+    if (currentFloorplanUrl) {
+        previewImg.src = currentFloorplanUrl;
+        previewContainer.style.display = 'block';
+        const dropzoneText = dropzone.querySelector('p');
+        if (dropzoneText) {
+            dropzoneText.textContent = 'Arrastra aquí para reemplazar el plano o haz clic';
+        }
+    } else {
+        previewImg.src = '';
+        previewContainer.style.display = 'none';
+        const dropzoneText = dropzone.querySelector('p');
+        if (dropzoneText) {
+            dropzoneText.textContent = 'Arrastra aquí la foto del plano o haz clic para buscar';
+        }
+    }
+}
+
+export function initFloorplanUpload() {
+    const dropzone = document.getElementById('floorplan-dropzone');
+    const fileInput = document.getElementById('floorplan-file-input') as HTMLInputElement | null;
+    const progressContainer = document.getElementById('floorplan-progress-container');
+    const progressText = document.getElementById('floorplan-progress-text');
+    const progressBar = document.getElementById('floorplan-progress-bar') as HTMLElement | null;
+    const previewContainer = document.getElementById('floorplan-preview-container');
+    const previewImg = document.getElementById('floorplan-preview') as HTMLImageElement | null;
+    const btnRemove = document.getElementById('btn-remove-floorplan');
+
+    if (!dropzone || !fileInput || !progressContainer || !progressText || !progressBar || !previewContainer || !previewImg || !btnRemove) {
+        return;
+    }
+
+    const inputEl = fileInput;
+    const containerEl = progressContainer;
+    const barEl = progressBar;
+    const textEl = progressText;
+
+    // Manejo de drag & drop
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        }, false);
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.classList.add('dragover');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropzone.addEventListener(eventName, () => {
+            dropzone.classList.remove('dragover');
+        }, false);
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        const files = dt?.files;
+        if (files && files.length > 0) {
+            handleFileSelection(files[0]);
+        }
+    });
+
+    dropzone.addEventListener('click', () => {
+        inputEl.click();
+    });
+
+    inputEl.addEventListener('change', () => {
+        const files = inputEl.files;
+        if (files && files.length > 0) {
+            handleFileSelection(files[0]);
+        }
+    });
+
+    function handleFileSelection(file: File) {
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Formato de archivo no válido. Solo se permiten imágenes JPG y PNG.');
+            inputEl.value = '';
+            return;
+        }
+
+        const maxBytes = 5 * 1024 * 1024;
+        if (file.size > maxBytes) {
+            alert('El archivo supera el tamaño máximo permitido de 5MB.');
+            inputEl.value = '';
+            return;
+        }
+
+        uploadFile(file);
+    }
+
+    async function uploadFile(file: File) {
+        try {
+            const { ref: storageRef, uploadBytesResumable, getDownloadURL } = await import('firebase/storage');
+            const { ref: dbRef, set } = await import('firebase/database');
+            const { storage, db } = await import('./firebase');
+            const { activeRestaurantId } = await import('./zones');
+
+            if (!activeRestaurantId) {
+                alert('No hay un restaurante activo seleccionado.');
+                return;
+            }
+
+            const fileRef = storageRef(storage, `restaurants/${activeRestaurantId}/floorplan.png`);
+            
+            containerEl.style.display = 'block';
+            barEl.style.width = '0%';
+            textEl.textContent = '0%';
+
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    barEl.style.width = `${progress}%`;
+                    textEl.textContent = `${progress}%`;
+                },
+                (error) => {
+                    console.error('Error al subir el plano:', error);
+                    alert(`Fallo en la subida: ${error.message}`);
+                    containerEl.style.display = 'none';
+                    inputEl.value = '';
+                },
+                async () => {
+                    try {
+                        const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                        await set(dbRef(db, `restaurants/${activeRestaurantId}/config/floorplanUrl`), downloadUrl);
+                        alert('¡Plano subido con éxito!');
+                        containerEl.style.display = 'none';
+                        inputEl.value = '';
+                    } catch (dbErr) {
+                        console.error('Error al guardar URL en la base de datos:', dbErr);
+                        alert('Error al guardar la referencia en la base de datos.');
+                        containerEl.style.display = 'none';
+                        inputEl.value = '';
+                    }
+                }
+            );
+        } catch (err) {
+            console.error('Error al cargar módulos de Firebase:', err);
+            alert('Error del sistema al iniciar la subida.');
+            containerEl.style.display = 'none';
+        }
+    }
+
+    btnRemove.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (!confirm('¿Estás seguro de que quieres eliminar el plano actual?')) {
+            return;
+        }
+
+        try {
+            const { ref: storageRef, deleteObject } = await import('firebase/storage');
+            const { ref: dbRef, remove } = await import('firebase/database');
+            const { storage, db } = await import('./firebase');
+            const { activeRestaurantId } = await import('./zones');
+
+            if (!activeRestaurantId) return;
+
+            const fileRef = storageRef(storage, `restaurants/${activeRestaurantId}/floorplan.png`);
+            
+            try {
+                await deleteObject(fileRef);
+            } catch (storageErr: any) {
+                if (storageErr.code !== 'storage/object-not-found') {
+                    console.error('Error al eliminar plano de Firebase Storage:', storageErr);
+                }
+            }
+
+            await remove(dbRef(db, `restaurants/${activeRestaurantId}/config/floorplanUrl`));
+            alert('Plano eliminado correctamente.');
+        } catch (err) {
+            console.error('Error al eliminar el plano:', err);
+            alert('Error al eliminar el plano. Revisa tu conexión.');
         }
     });
 }

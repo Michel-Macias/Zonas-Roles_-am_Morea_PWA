@@ -24,9 +24,11 @@ export const getZonesData = (): Zona[] => {
 
 export let currentAsignaciones: Record<string, string> = {};
 export let activeRestaurantId: string = localStorage.getItem('active_restaurant_id') || 'demo-restaurant';
+export let currentFloorplanUrl: string | null = null;
 
 let unsubscribeAssignments: (() => void) | null = null;
 let unsubscribeZones: (() => void) | null = null;
+let unsubscribeFloorplan: (() => void) | null = null;
 let lastOnUpdate: (() => void) | null = null;
 
 export function setRestaurantId(id: string) {
@@ -44,6 +46,9 @@ export function initZones(onUpdate: () => void) {
     }
     if (unsubscribeZones) {
         unsubscribeZones();
+    }
+    if (unsubscribeFloorplan) {
+        unsubscribeFloorplan();
     }
 
     // Leer nombre del restaurante para actualizar la insignia en el header
@@ -77,6 +82,12 @@ export function initZones(onUpdate: () => void) {
     const asignacionesRef = ref(db, `restaurants/${activeRestaurantId}/assignments`);
     unsubscribeAssignments = onValue(asignacionesRef, (snapshot) => {
         currentAsignaciones = snapshot.val() || {};
+        onUpdate();
+    });
+
+    const floorplanRef = ref(db, `restaurants/${activeRestaurantId}/config/floorplanUrl`);
+    unsubscribeFloorplan = onValue(floorplanRef, (snapshot) => {
+        currentFloorplanUrl = snapshot.val() || null;
         onUpdate();
     });
 
