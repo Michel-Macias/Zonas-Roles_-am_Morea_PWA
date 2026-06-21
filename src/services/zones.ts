@@ -14,6 +14,12 @@ export interface Zone {
         da_soporte_a: string[];
     };
     updatedAt: number;
+    position?: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
 }
 
 export interface ZonaFirebase {
@@ -28,6 +34,12 @@ export interface ZonaFirebase {
         da_soporte_a: string[];
     };
     updatedAt: number;
+    position?: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
 }
 
 function toFirebase(zone: Zone): ZonaFirebase {
@@ -40,6 +52,7 @@ function toFirebase(zone: Zone): ZonaFirebase {
         equipamiento: zone.equipamientos,
         flujos: zone.flujos,
         updatedAt: zone.updatedAt,
+        position: zone.position,
     };
 }
 
@@ -53,6 +66,7 @@ export function fromFirebase(raw: ZonaFirebase): Zone {
         equipamientos: raw.equipamiento,
         flujos: raw.flujos,
         updatedAt: raw.updatedAt,
+        position: raw.position,
     };
 }
 

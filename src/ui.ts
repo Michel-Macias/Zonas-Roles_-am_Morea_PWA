@@ -2,6 +2,7 @@ import { escapeHTML } from './utils';
 import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl } from './zones';
 import { renderZonesList } from './admin/zones';
 import { initZoneForm } from './admin/zone-form';
+import { renderFloorplan, initFloorplanToolbar } from './admin/floorplan-editor';
 
 export function showAdminPanel(username: string) {
     document.getElementById('admin-login-container')?.classList.add('hidden');
@@ -12,6 +13,7 @@ export function showAdminPanel(username: string) {
     if(cfgBtn) cfgBtn.style.display = 'inline-flex';
     renderZonesList();
     initZoneForm();
+    renderFloorplan();
 }
 
 export function hideAdminPanel() {
@@ -35,6 +37,9 @@ export function initTabs() {
             document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
             if(targetId) {
                 document.getElementById(targetId)?.classList.remove('hidden');
+                if (targetId === 'view-plano') {
+                    renderFloorplan();
+                }
             }
         });
     });
@@ -130,7 +135,13 @@ export function showZonaModal(id: string) {
     if(!zona) return;
     
     const asignado = currentAsignaciones[id] || 'Sin asignar';
-    const mapHtml = document.getElementById('plano-svg')?.outerHTML || '';
+    const dynamicCanvas = document.getElementById('floorplan-canvas');
+    let mapHtml = '';
+    if (dynamicCanvas && dynamicCanvas.style.display !== 'none') {
+        mapHtml = dynamicCanvas.outerHTML;
+    } else {
+        mapHtml = document.getElementById('plano-svg')?.outerHTML || '';
+    }
     
     const html = `
         <div class="modal-body-zona">
@@ -166,6 +177,16 @@ export function showZonaModal(id: string) {
         const activeGroup = modalMap.querySelector('#map-' + id);
         if(activeGroup) activeGroup.classList.add('active');
     }
+
+    const modalCanvas = document.querySelector('#modal-body-zona .floorplan-canvas') as HTMLElement | null;
+    if (modalCanvas) {
+        modalCanvas.removeAttribute('id');
+        modalCanvas.classList.remove('design-mode');
+        const activeBlock = modalCanvas.querySelector(`[data-zone-id="${id}"]`);
+        if (activeBlock) {
+            activeBlock.classList.add('active');
+        }
+    }
     
     if (!modal.open) {
         modal.showModal();
@@ -186,6 +207,7 @@ export function renderAll() {
     renderCamareros();
     updateModalIfOpen();
     renderFloorplanPreview();
+    renderFloorplan();
 }
 
 export function initRestaurantNameConfig() {
@@ -418,4 +440,8 @@ export function initFloorplanUpload() {
             alert('Error al eliminar el plano. Revisa tu conexión.');
         }
     });
+}
+
+export function initFloorplanTab() {
+    initFloorplanToolbar();
 }

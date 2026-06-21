@@ -15,6 +15,12 @@ export interface Zona {
     pide_a: string[];
     da_soporte_a: string[];
   };
+  position?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 export let currentZones: Zona[] = [];

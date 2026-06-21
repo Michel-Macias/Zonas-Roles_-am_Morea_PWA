@@ -18,6 +18,7 @@
         </div>
         <nav class="tabs">
             <button class="tab-btn active" data-target="view-camarero">Camareros</button>
+            <button class="tab-btn" data-target="view-plano">Plano</button>
             <button class="tab-btn" data-target="view-admin">Admin</button>
             <button class="tab-btn" id="btn-normas">Normas</button>
         </nav>
@@ -36,8 +37,37 @@
                 <button class="btn-manual" onclick="document.getElementById('modal-manual-camarero').showModal()">📖 Manual de Uso (Camareros)</button>
             </div>
             
+
+
+            <div id="grid-zonas-camarero" class="zonas-grid">
+                <!-- Generado por JS -->
+            </div>
+        </section>
+
+        <!-- VISTA PLANO (DEDICADA) -->
+        <section id="view-plano" class="view hidden">
+            <!-- Barra de herramientas del plano (solo visible para admin/encargado cuando esté autenticado) -->
+            <div id="floorplan-toolbar" style="display: none; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                <span style="font-weight: 700; color: var(--secondary);">🗺️ Diseño del Plano</span>
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-edit-layout" class="btn-manual" style="background: #EFF6FF; border-color: #3B82F6; color: #1D4ED8;">📐 Editar Distribución</button>
+                    <button id="btn-save-layout" class="btn-manual" style="background: #DCFCE7; border-color: #22C55E; color: #166534; display: none;">💾 Guardar Distribución</button>
+                    <button id="btn-cancel-layout" class="btn-manual" style="background: #FEE2E2; border-color: #EF4444; color: #991B1B; display: none;">✕ Cancelar</button>
+                </div>
+            </div>
+
             <div class="plano-general-container">
                 <h3>🗺️ Plano General del Local</h3>
+                <p id="floorplan-edit-hint" style="display: none; text-align: center; color: var(--primary-hover); font-weight: 600; margin-bottom: 1rem; font-size: 0.9rem;">
+                    Arrastra las zonas para moverlas. Arrastra desde la esquina inferior derecha (tirador) para cambiar su tamaño.
+                </p>
+                
+                <!-- Lienzo dinámico (se llenará por JS si hay floorplanUrl) -->
+                <div id="floorplan-canvas" class="floorplan-canvas" style="display: none;">
+                    <!-- Zonas generadas dinámicamente -->
+                </div>
+
+                <!-- Fallback original (plano SVG estático) -->
                 <svg viewBox="0 0 800 620" id="plano-svg" class="plano-svg">
                     
                     <!-- COMEDOR (Abajo del todo) -->
@@ -96,10 +126,6 @@
                         <text x="460" y="445" class="zona-label">Pasillo Central</text>
                     </g>
                 </svg>
-            </div>
-
-            <div id="grid-zonas-camarero" class="zonas-grid">
-                <!-- Generado por JS -->
             </div>
         </section>
 
