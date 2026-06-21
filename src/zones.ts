@@ -17,12 +17,16 @@ export interface Zona {
   };
 }
 
-export const getZonesData = (): Zona[] => zonasData as Zona[];
+export let currentZones: Zona[] = [];
+export const getZonesData = (): Zona[] => {
+    return currentZones.length > 0 ? currentZones : (zonasData as Zona[]);
+};
 
 export let currentAsignaciones: Record<string, string> = {};
 export let activeRestaurantId: string = localStorage.getItem('active_restaurant_id') || 'demo-restaurant';
 
 let unsubscribeAssignments: (() => void) | null = null;
+let unsubscribeZones: (() => void) | null = null;
 let lastOnUpdate: (() => void) | null = null;
 
 export function setRestaurantId(id: string) {
@@ -38,6 +42,9 @@ export function initZones(onUpdate: () => void) {
     if (unsubscribeAssignments) {
         unsubscribeAssignments();
     }
+    if (unsubscribeZones) {
+        unsubscribeZones();
+    }
 
     // Leer nombre del restaurante para actualizar la insignia en el header
     get(ref(db, `restaurants/${activeRestaurantId}/config/name`)).then((snap) => {
@@ -52,6 +59,19 @@ export function initZones(onUpdate: () => void) {
         if (badge) {
             badge.textContent = activeRestaurantId;
         }
+    });
+
+    const zonesRef = ref(db, `restaurants/${activeRestaurantId}/zones`);
+    unsubscribeZones = onValue(zonesRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            currentZones = Object.values(data).sort((a: any, b: any) => {
+                return String(a.id).localeCompare(String(b.id), undefined, { numeric: true });
+            }) as Zona[];
+        } else {
+            currentZones = zonasData as Zona[];
+        }
+        onUpdate();
     });
 
     const asignacionesRef = ref(db, `restaurants/${activeRestaurantId}/assignments`);

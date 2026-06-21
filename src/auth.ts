@@ -3,6 +3,7 @@ import { ref, set, get } from 'firebase/database';
 import { auth, db } from './firebase';
 import { showAdminPanel, hideAdminPanel } from './ui';
 import { setRestaurantId } from './zones';
+import zonasData from './data/zones.json';
 
 function generateRestaurantId(): string {
     return 'rest-' + Math.random().toString(36).substring(2, 9).toUpperCase();
@@ -103,11 +104,19 @@ export function initAuth() {
                         // Generar ID único para el restaurante
                         const restaurantId = generateRestaurantId();
                         
+                        // Convertir array de zonas a un objeto indexado por su ID
+                        const zonesObject: Record<string, any> = {};
+                        zonasData.forEach(z => {
+                            zonesObject[z.id] = z;
+                        });
+                        
                         // Crear registro de restaurante en la base de datos
                         await set(ref(db, `restaurants/${restaurantId}/config`), {
                             name: "Mi Restaurante",
                             createdAt: Date.now()
                         });
+                        
+                        await set(ref(db, `restaurants/${restaurantId}/zones`), zonesObject);
                         
                         await set(ref(db, `restaurants/${restaurantId}/members/${user.uid}`), {
                             role: "admin",
