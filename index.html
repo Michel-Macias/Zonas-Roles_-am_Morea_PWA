@@ -37,7 +37,13 @@
                 <button class="btn-manual" onclick="document.getElementById('modal-manual-camarero').showModal()">📖 Manual de Uso (Camareros)</button>
             </div>
             
-
+            <!-- SELECTOR TURNO ACTIVO CAMARERO -->
+            <div style="margin: 1rem 0 1.5rem 0; display: flex; align-items: center; gap: 10px; background: var(--bg-card); padding: 0.75rem 1rem; border-radius: 12px; border: 1px solid var(--border-color); width: fit-content;">
+                <label for="select-active-shift-camarero" style="font-weight: 700; color: var(--secondary); margin-bottom: 0;">🕒 Turno:</label>
+                <select id="select-active-shift-camarero" style="padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); font-family: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; color: var(--secondary);">
+                    <option value="">Cargando turnos...</option>
+                </select>
+            </div>
 
             <div id="grid-zonas-camarero" class="zonas-grid">
                 <!-- Generado por JS -->
@@ -200,11 +206,29 @@
                     <button id="btn-add-zone" class="btn-manual" style="margin-top: 10px;">+ Nueva Zona</button>
                 </div>
                 <div id="zones-admin-list"></div>
+
+                <!-- GESTIÓN DE TURNOS -->
+                <div class="intro-text" style="margin-top: 2rem;">
+                    <h2>Gestión de Turnos</h2>
+                    <p>Crea, edita o elimina turnos para franjas horarias específicas del restaurante.</p>
+                    <button id="btn-add-shift" class="btn-manual" style="margin-top: 10px;">+ Nuevo Turno</button>
+                </div>
+                <div id="shifts-list-container" class="admin-grid" style="margin-top: 1rem; gap: 10px;">
+                    <!-- Generado por JS -->
+                </div>
                 
                 <div class="intro-text" style="margin-top: 2rem;">
                     <h2>Asignación de Personal</h2>
                     <p>Asigna los nombres a cada zona. Se sincronizará en tiempo real con todos los camareros.</p>
                     <button class="btn-manual" onclick="document.getElementById('modal-manual-admin').showModal()" style="margin-top: 10px;">📖 Manual del Encargado</button>
+                </div>
+
+                <!-- SELECTOR TURNO ACTIVO ADMIN -->
+                <div style="margin: 1.5rem 0; display: flex; align-items: center; gap: 12px; background: var(--bg-card); padding: 1rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <label for="select-active-shift-admin" style="font-weight: 700; color: var(--secondary); margin-bottom: 0;">🕒 Turno Activo Actual:</label>
+                    <select id="select-active-shift-admin" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-card); font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; color: var(--secondary); min-width: 200px;">
+                        <option value="">Cargando turnos...</option>
+                    </select>
                 </div>
                 
                 <div id="grid-zonas-admin" class="admin-grid">
@@ -391,6 +415,37 @@
                     <p style="color: var(--text-muted); margin-top: 5px; font-size: 0.95rem;">Si usas un iPad compartido del restaurante, haz clic en "Cerrar Sesión" arriba a la derecha para que nadie modifique el cuadrante usando tu usuario.</p>
                 </div>
             </div>
+        </div>
+    </dialog>
+
+    <!-- MODAL FORMULARIO TURNO -->
+    <dialog id="modal-shift-form" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Formulario de Turno</h2>
+                <button class="close-modal">✕</button>
+            </div>
+            <form id="form-shift" class="form-grid">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="shift-nombre" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Nombre del Turno</label>
+                    <input type="text" id="shift-nombre" placeholder="Ej. Mañana, Tarde, Noche" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                    <span id="shift-nombre-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                </div>
+                <div class="form-group" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div style="flex: 1;">
+                        <label for="shift-hora-inicio" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Hora Inicio (HH:MM)</label>
+                        <input type="text" id="shift-hora-inicio" placeholder="08:00" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                        <span id="shift-hora-inicio-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                    </div>
+                    <div style="flex: 1;">
+                        <label for="shift-hora-fin" style="display: block; font-weight: 700; margin-bottom: 0.5rem;">Hora Fin (HH:MM)</label>
+                        <input type="text" id="shift-hora-fin" placeholder="16:00" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color); font-family: inherit;">
+                        <span id="shift-hora-fin-error" class="error-message" style="display: none; color: var(--danger); font-size: 0.85rem; margin-top: 4px;"></span>
+                    </div>
+                </div>
+                <div id="shift-form-error" class="error-message" style="display: none; color: var(--danger); margin-bottom: 1rem; font-weight: bold;"></div>
+                <button type="submit" class="btn-submit" style="width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">💾 Guardar Turno</button>
+            </form>
         </div>
     </dialog>
 

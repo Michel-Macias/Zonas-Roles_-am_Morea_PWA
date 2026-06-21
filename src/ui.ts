@@ -1,8 +1,11 @@
 import { escapeHTML } from './utils';
-import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl, activeRestaurantId } from './zones';
+import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl, activeRestaurantId, activeShiftId } from './zones';
 import { renderZonesList } from './admin/zones';
 import { initZoneForm } from './admin/zone-form';
 import { renderFloorplan, initFloorplanToolbar } from './admin/floorplan-editor';
+import { renderShiftsList } from './admin/shifts';
+import { initShiftForm } from './admin/shift-form';
+import { onShiftsChange } from './services/shifts';
 
 export function showAdminPanel(username: string) {
     document.getElementById('admin-login-container')?.classList.add('hidden');
@@ -14,6 +17,8 @@ export function showAdminPanel(username: string) {
     renderZonesList();
     initZoneForm();
     renderFloorplan();
+    initShiftForm();
+    renderShiftsList();
 }
 
 export function hideAdminPanel() {
@@ -238,6 +243,11 @@ export function renderAll() {
     updateModalIfOpen();
     renderFloorplanPreview();
     renderFloorplan();
+    updateShiftSelectors();
+
+    if (!document.getElementById('admin-content')?.classList.contains('hidden')) {
+        renderShiftsList();
+    }
 }
 
 export function initRestaurantNameConfig() {
@@ -474,4 +484,57 @@ export function initFloorplanUpload() {
 
 export function initFloorplanTab() {
     initFloorplanToolbar();
+}
+
+function setupShiftSelectors() {
+    onShiftsChange((shifts) => {
+        const adminSelect = document.getElementById('select-active-shift-admin') as HTMLSelectElement | null;
+        const camareroSelect = document.getElementById('select-active-shift-camarero') as HTMLSelectElement | null;
+        
+        const optionsHtml = `
+            <option value="">-- Sin Turno Asignado --</option>
+            ${shifts.map(s => `<option value="${s.id || ''}" ${s.id === activeShiftId ? 'selected' : ''}>${escapeHTML(s.nombre)} (${escapeHTML(s.horaInicio)} - ${escapeHTML(s.horaFin)})</option>`).join('')}
+        `;
+        
+        if (adminSelect) {
+            adminSelect.innerHTML = optionsHtml;
+            adminSelect.value = activeShiftId || '';
+        }
+        if (camareroSelect) {
+            camareroSelect.innerHTML = optionsHtml;
+            camareroSelect.value = activeShiftId || '';
+        }
+    });
+
+    const handleSelectChange = async (e: Event) => {
+        const val = (e.target as HTMLSelectElement).value;
+        try {
+            const { set, ref } = await import('firebase/database');
+            const { db } = await import('./firebase');
+            await set(ref(db, `restaurants/${activeRestaurantId}/config/activeShiftId`), val || null);
+        } catch (err) {
+            console.error("Error setting active shift:", err);
+        }
+    };
+
+    const adminSelect = document.getElementById('select-active-shift-admin');
+    if (adminSelect) {
+        adminSelect.addEventListener('change', handleSelectChange);
+    }
+
+    const camareroSelect = document.getElementById('select-active-shift-camarero');
+    if (camareroSelect) {
+        camareroSelect.addEventListener('change', handleSelectChange);
+    }
+}
+
+export function updateShiftSelectors() {
+    const adminSelect = document.getElementById('select-active-shift-admin') as HTMLSelectElement | null;
+    const camareroSelect = document.getElementById('select-active-shift-camarero') as HTMLSelectElement | null;
+    if (adminSelect) adminSelect.value = activeShiftId || '';
+    if (camareroSelect) camareroSelect.value = activeShiftId || '';
+}
+
+export function initShiftsUI() {
+    setupShiftSelectors();
 }

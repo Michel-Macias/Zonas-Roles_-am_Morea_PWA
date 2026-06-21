@@ -1,5 +1,5 @@
 import { initAuth } from './auth';
-import { initTabs, initModals, initRestaurantNameConfig, initFloorplanUpload, renderAdmin, renderCamareros, renderAll, initFloorplanTab } from './ui';
+import { initTabs, initModals, initRestaurantNameConfig, initFloorplanUpload, renderAdmin, renderCamareros, renderAll, initFloorplanTab, initShiftsUI } from './ui';
 import { initZones, setRestaurantId } from './zones';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initRestaurantNameConfig();
     initFloorplanUpload();
     initFloorplanTab();
+    initShiftsUI();
     
     // 3. Inicializar estado inicial vacío
     renderAdmin();

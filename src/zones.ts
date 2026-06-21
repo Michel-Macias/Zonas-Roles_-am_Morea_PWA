@@ -32,9 +32,12 @@ export let currentAsignaciones: Record<string, string> = {};
 export let activeRestaurantId: string = localStorage.getItem('active_restaurant_id') || 'demo-restaurant';
 export let currentFloorplanUrl: string | null = null;
 
+export let activeShiftId: string | null = null;
+
 let unsubscribeAssignments: (() => void) | null = null;
 let unsubscribeZones: (() => void) | null = null;
 let unsubscribeFloorplan: (() => void) | null = null;
+let unsubscribeActiveShift: (() => void) | null = null;
 let lastOnUpdate: (() => void) | null = null;
 
 export function setRestaurantId(id: string) {
@@ -55,6 +58,9 @@ export function initZones(onUpdate: () => void) {
     }
     if (unsubscribeFloorplan) {
         unsubscribeFloorplan();
+    }
+    if (unsubscribeActiveShift) {
+        unsubscribeActiveShift();
     }
 
     // Leer nombre del restaurante para actualizar la insignia en el header
@@ -85,10 +91,29 @@ export function initZones(onUpdate: () => void) {
         onUpdate();
     });
 
-    const asignacionesRef = ref(db, `restaurants/${activeRestaurantId}/assignments`);
-    unsubscribeAssignments = onValue(asignacionesRef, (snapshot) => {
-        currentAsignaciones = snapshot.val() || {};
-        onUpdate();
+    const activeShiftRef = ref(db, `restaurants/${activeRestaurantId}/config/activeShiftId`);
+    unsubscribeActiveShift = onValue(activeShiftRef, (snapshot) => {
+        const newShiftId = snapshot.val() || null;
+        activeShiftId = newShiftId;
+
+        if (unsubscribeAssignments) {
+            unsubscribeAssignments();
+        }
+
+        const assignmentsPath = newShiftId 
+            ? `restaurants/${activeRestaurantId}/shifts/${newShiftId}/assignments`
+            : `restaurants/${activeRestaurantId}/assignments`;
+
+        const asignacionesRef = ref(db, assignmentsPath);
+        unsubscribeAssignments = onValue(asignacionesRef, (snap) => {
+            currentAsignaciones = snap.val() || {};
+            onUpdate();
+        });
+    });
+
+    // Suscribirse a los turnos de manera reactiva para poblar los selectores
+    import('./services/shifts').then(({ subscribeShifts }) => {
+        subscribeShifts();
     });
 
     const floorplanRef = ref(db, `restaurants/${activeRestaurantId}/config/floorplanUrl`);
@@ -113,9 +138,15 @@ export function initZones(onUpdate: () => void) {
 }
 
 export function saveAsignacion(id: string, name: string) {
-    set(ref(db, `restaurants/${activeRestaurantId}/assignments/` + id), name);
+    const path = activeShiftId 
+        ? `restaurants/${activeRestaurantId}/shifts/${activeShiftId}/assignments/` + id
+        : `restaurants/${activeRestaurantId}/assignments/` + id;
+    set(ref(db, path), name);
 }
 
 export function clearAssignments() {
-    remove(ref(db, `restaurants/${activeRestaurantId}/assignments`));
+    const path = activeShiftId
+        ? `restaurants/${activeRestaurantId}/shifts/${activeShiftId}/assignments`
+        : `restaurants/${activeRestaurantId}/assignments`;
+    remove(ref(db, path));
 }
