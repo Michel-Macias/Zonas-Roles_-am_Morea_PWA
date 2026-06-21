@@ -167,7 +167,15 @@
                     </div>
                 </div>
                 
+                <!-- GESTIÓN DE ZONAS -->
                 <div class="intro-text">
+                    <h2>Gestión de Zonas</h2>
+                    <p>Crea, edita o elimina zonas del restaurante. Los cambios se aplican en tiempo real.</p>
+                    <button id="btn-add-zone" class="btn-manual" style="margin-top: 10px;">+ Nueva Zona</button>
+                </div>
+                <div id="zones-admin-list"></div>
+                
+                <div class="intro-text" style="margin-top: 2rem;">
                     <h2>Asignación de Personal</h2>
                     <p>Asigna los nombres a cada zona. Se sincronizará en tiempo real con todos los camareros.</p>
                     <button class="btn-manual" onclick="document.getElementById('modal-manual-admin').showModal()" style="margin-top: 10px;">📖 Manual del Encargado</button>
@@ -186,6 +194,49 @@
         <div class="modal-content">
             <button class="close-modal">&times;</button>
             <div id="modal-body-zona"></div>
+        </div>
+    </dialog>
+
+    <!-- MODAL FORMULARIO ZONA -->
+    <dialog id="modal-zone-form" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">📝 Zona</h2>
+            <form id="form-zone" style="display:flex; flex-direction:column; gap:1rem;">
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Nombre *</label>
+                    <input type="text" id="zone-nombre" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                    <div id="zone-nombre-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Ubicación *</label>
+                    <input type="text" id="zone-ubicacion" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;">
+                    <div id="zone-ubicacion-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Misión Principal *</label>
+                    <textarea id="zone-mision" rows="2" required minlength="1" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                    <div id="zone-mision-error" class="field-error" style="color:var(--danger); margin-top:5px; font-weight:700; display:none;"></div>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Tareas Secundarias (una por línea)</label>
+                    <textarea id="zone-tareas" rows="3" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Equipamientos (una por línea)</label>
+                    <textarea id="zone-equipos" rows="3" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Flujos — Pide a (una por línea)</label>
+                    <textarea id="zone-pide-a" rows="2" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <div>
+                    <label style="display:block; font-weight:700; margin-bottom:0.4rem; color:var(--secondary);">Flujos — Da soporte a (una por línea)</label>
+                    <textarea id="zone-da-soporte" rows="2" style="width:100%; padding:14px; border-radius:8px; border:1px solid #D1D5DB; background:#F9FAFB; font-family:inherit; font-size:1.05rem;"></textarea>
+                </div>
+                <button type="submit" style="width:100%; padding:14px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:900; font-size:1.05rem; cursor:pointer;">Guardar</button>
+            </form>
+            <div id="zone-form-error" style="color:var(--danger); margin-top:10px; font-weight:700; display:none;"></div>
         </div>
     </dialog>
 

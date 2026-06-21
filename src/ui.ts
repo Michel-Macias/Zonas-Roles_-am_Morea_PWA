@@ -1,5 +1,7 @@
 import { escapeHTML } from './utils';
 import { getZonesData, currentAsignaciones, saveAsignacion, clearAssignments, currentFloorplanUrl } from './zones';
+import { renderZonesList } from './admin/zones';
+import { initZoneForm } from './admin/zone-form';
 
 export function showAdminPanel(username: string) {
     document.getElementById('admin-login-container')?.classList.add('hidden');
@@ -8,6 +10,8 @@ export function showAdminPanel(username: string) {
     if(el) el.textContent = username;
     const cfgBtn = document.getElementById('btn-restaurant-config');
     if(cfgBtn) cfgBtn.style.display = 'inline-flex';
+    renderZonesList();
+    initZoneForm();
 }
 
 export function hideAdminPanel() {
@@ -178,6 +182,7 @@ export function updateModalIfOpen() {
 
 export function renderAll() {
     updateAdminInputs();
+    renderZonesList();
     renderCamareros();
     updateModalIfOpen();
     renderFloorplanPreview();
