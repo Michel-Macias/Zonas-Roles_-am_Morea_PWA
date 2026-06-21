@@ -1,4 +1,4 @@
-import { getZonesData, currentFloorplanUrl } from '../zones';
+import { getZonesData, currentFloorplanUrl, activeRestaurantId } from '../zones';
 import { showZonaModal } from '../ui';
 
 // Variables para rastrear el estado del lienzo
@@ -49,6 +49,8 @@ export function renderFloorplan() {
     // Limpiar canvas
     canvas.innerHTML = '';
 
+    const miZonaId = localStorage.getItem('puestoya_mi_zona_' + activeRestaurantId);
+
     const zones = getZonesData();
     zones.forEach(z => {
         // Posiciones por defecto si no están configuradas
@@ -70,6 +72,9 @@ export function renderFloorplan() {
         // Crear elemento DOM de la zona
         const block = document.createElement('div');
         block.className = 'canvas-zone-block';
+        if (z.id === miZonaId) {
+            block.classList.add('is-mi-zona');
+        }
         block.setAttribute('data-zone-id', z.id);
         
         // Estilos de posición absoluta en base a porcentajes
