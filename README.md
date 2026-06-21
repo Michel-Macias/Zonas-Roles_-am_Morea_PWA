@@ -2,46 +2,64 @@
 
 > **Aviso:** Esta es una versión **demo ilustrativa**. No es ejecutable sin despliegue propio, credenciales Firebase privadas y configuración de backend. El código fuente se publica con fines de evaluación y portafolio.
 
-![Version](https://img.shields.io/badge/version-demo-E65100.svg)
-![PWA](https://img.shields.io/badge/PWA-Concept-FFB300.svg)
-![SDD](https://img.shields.io/badge/Methodology-OpenSpec%20%2F%20SDD-8B5CF6.svg)
+[![Demo](https://img.shields.io/badge/ver-demo_online-00C851?style=for-the-badge)](https://michel-macias.github.io/Zonas-Roles_-am_Morea_PWA/)
+[![License](https://img.shields.io/badge/licencia-comercial_no_permitida-red.svg)](LICENSE)
 
-PuestoYa es una plataforma de **gestión de zonas y turnos para hostelería** en tiempo real. Esta versión pública muestra la arquitectura, el stack y el diseño de la interfaz, pero no incluye la lógica de negocio completa ni las credenciales necesarias para funcionar.
+PuestoYa es una PWA multi-tenant de **gestión de zonas y turnos para hostelería**.
 
----
-
-## 🏗️ Lo que se muestra
-
-| Área | Detalle |
-|------|---------|
-| **Frontend** | TypeScript modular + Vite |
-| **Arquitectura** | Multi-tenant SaaS bajo ruta `/restaurants/{restaurantId}/` |
-| **Diseño** | Cuadrícula de zonas, selector de turnos, plano visual drag & drop |
-| **Metodología** | Especificaciones OpenSpec / SDD |
+> ✅ **Demo pública:** [https://michel-macias.github.io/Zonas-Roles_-am_Morea_PWA/](https://michel-macias.github.io/Zonas-Roles_-am_Morea_PWA/)
 
 ---
 
-## 📦 Repositorio
+## 🏗️ Arquitectura
 
-- **Rama estable:** `main`
-- **Rama de desarrollo actual:** `desarrollo-con-Hermes`
-- **Licencia:** Código disponible para evaluación. Uso comercial sujeto a licencia. Ver [`LICENSE`](LICENSE) y [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md).
+- **Frontend:** TypeScript + Vite
+- **Backend:** Firebase Realtime DB, Auth y Storage
+- **Arquitectura:** Multi-tenant bajo `/restaurants/{restaurantId}/`
+- **Metodología:** OpenSpec SDD (especificaciones inmutables archivadas en `openspec/`)
 
 ---
 
-## 📄 Licencia
+## 🚀 Características
 
-Este proyecto se publica bajo una licencia **source-available** que permite evaluación y aprendizaje, pero prohíbe el uso comercial y la redistribución sin autorización expresa del titular.
+| Módulo | Estado |
+|--------|--------|
+| CRUD de Zonas | Implementado |
+| Editor Visual de Plano | Implementado |
+| Persistencia "Mi Zona" | Implementado |
+| CRUD de Turnos y Asignaciones | Especificado |
+| Checklists por Zona | Roadmap |
 
-- 📄 [`LICENSE`](LICENSE) — Términos de uso y restricciones.
-- 💼 [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md) — Modalidades SaaS y On-Premise.
+---
+
+## 📦 Estructura del Proyecto
+
+```
+├── openspec/              # Especificaciones OpenSpec SDD
+├── src/
+│   ├── services/         # Lógica de negocio
+│   ├── admin/            # Paneles administrativos
+│   ├── ui.ts             # Componentes UI
+│   └── data/             # Datos estáticos
+├── css/style.css
+├── index.html
+├── manifest.json
+└── sw.js                 # Service Worker (PWA)
+```
+
+---
+
+## 🔒 Licencia
+
+- **Código disponible para evaluación.** Úsalo para aprender y adaptar.
+- **Uso comercial prohibido sin licencia expresa.**
+- Ver [`LICENSE`](LICENSE) y [`COMMERCIAL-LICENSE.md`](COMMERCIAL-LICENSE.md).
 
 ---
 
 ## 📬 Contacto
 
-Para licencias comerciales o consultas sobre el proyecto:
-- GitHub: [Michel-Macias](https://github.com/Michel-Macias)
+- GitHub: [@Michel-Macias](https://github.com/Michel-Macias)
 
 ---
 
